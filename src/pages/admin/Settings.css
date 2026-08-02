@@ -1,0 +1,427 @@
+/* ─── Settings Layout ─────────────────────────────────────────────────── */
+.settings-layout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* ─── Sidebar ─────────────────────────────────────────────────────────── */
+.settings-sidebar {
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: var(--surface-color);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1rem;
+  flex-shrink: 0;
+}
+
+.settings-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: var(--neutral-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.settings-tab:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-color);
+}
+
+.settings-tab.active {
+  background: linear-gradient(135deg, rgba(182, 42, 45, 0.15) 0%, rgba(213, 87, 94, 0.1) 100%);
+  color: #D5575E;
+  font-weight: 600;
+}
+
+/* ─── Content Area ────────────────────────────────────────────────────── */
+.settings-content-area {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ─── Card ────────────────────────────────────────────────────────────── */
+.settings-card {
+  background: var(--surface-color);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.settings-card .card-header {
+  padding: 1.5rem 1.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.settings-card .card-header h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.card-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--neutral-color);
+}
+
+.settings-card .card-body {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ─── Form Sections ───────────────────────────────────────────────────── */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.25rem 0;
+}
+
+.form-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #D5575E;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.form-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 1.5rem 0;
+}
+
+/* ─── Avatar Upload ───────────────────────────────────────────────────── */
+.avatar-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.avatar-preview {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--neutral-color);
+}
+
+.avatar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ─── Form Rows ───────────────────────────────────────────────────────── */
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-row label {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--neutral-color);
+}
+
+.required-star {
+  color: #D5575E;
+  margin-left: 2px;
+}
+
+/* ─── Inputs ──────────────────────────────────────────────────────────── */
+.settings-input {
+  width: 100%;
+  max-width: 520px;
+  padding: 0.8rem 1.1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: var(--text-color);
+  font-size: 0.92rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  box-sizing: border-box;
+}
+
+.settings-input:focus {
+  outline: none;
+  border-color: #D5575E;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.settings-input.input-error {
+  border-color: #ef4444;
+}
+
+.settings-input:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ─── Password wrapper ────────────────────────────────────────────────── */
+.password-wrapper {
+  position: relative;
+  max-width: 520px;
+}
+
+.password-wrapper .settings-input {
+  max-width: 100%;
+  padding-right: 3rem;
+}
+
+.pw-toggle {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--neutral-color);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.pw-toggle:hover {
+  color: var(--text-color);
+}
+
+/* ─── Hints & Errors ──────────────────────────────────────────────────── */
+.input-hint {
+  font-size: 0.78rem;
+  color: var(--neutral-color);
+  opacity: 0.65;
+}
+
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* ─── Banners ─────────────────────────────────────────────────────────── */
+.info-banner,
+.warning-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.1rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  max-width: 520px;
+}
+
+.info-banner {
+  background: rgba(99, 179, 237, 0.08);
+  border: 1px solid rgba(99, 179, 237, 0.25);
+  color: #63b3ed;
+}
+
+.warning-banner {
+  background: rgba(252, 129, 74, 0.1);
+  border: 1px solid rgba(252, 129, 74, 0.3);
+  color: #fc814a;
+  margin-top: 0.75rem;
+}
+
+/* ─── Toggle Switch ───────────────────────────────────────────────────── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 520px;
+}
+
+.toggle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.toggle-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.toggle-desc {
+  font-size: 0.82rem;
+  color: var(--neutral-color);
+  line-height: 1.4;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  border-radius: 99px;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.25s ease;
+  padding: 0;
+}
+
+.toggle-switch.on {
+  background: linear-gradient(135deg, #B62A2D, #D5575E);
+}
+
+.toggle-switch.off {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  transition: left 0.25s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.toggle-switch.on .toggle-thumb  { left: 24px; }
+.toggle-switch.off .toggle-thumb { left: 3px; }
+
+/* ─── Footer ──────────────────────────────────────────────────────────── */
+.settings-card .card-footer {
+  padding: 1.25rem 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.01);
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ─── Save button ─────────────────────────────────────────────────────── */
+.save-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.6rem;
+  background: linear-gradient(135deg, #B62A2D 0%, #D5575E 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.save-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ─── Button spinner ──────────────────────────────────────────────────── */
+.btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .settings-layout {
+    flex-direction: column;
+  }
+
+  .settings-sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0.6rem;
+  }
+
+  .settings-tab {
+    white-space: nowrap;
+    padding: 0.7rem 1rem;
+  }
+
+  .settings-input,
+  .password-wrapper,
+  .toggle-row,
+  .info-banner,
+  .warning-banner {
+    max-width: 100%;
+  }
+}

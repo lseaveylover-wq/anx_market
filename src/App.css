@@ -1,0 +1,121 @@
+/* ── Theme Token Aliases ────────────────────────────────────────────────── */
+/* Maps older variable names used throughout admin/seller CSS
+   to the canonical tokens defined in index.css                            */
+:root {
+  --surface-color:     var(--bg-surface);
+  --background-color:  var(--bg-main);
+  --bg-color:          var(--bg-main);
+  --text-color:        var(--text-primary);
+  --neutral-color:     var(--text-secondary);
+  --primary-color:     #B62A2D;
+  --bg-dark:           var(--bg-main);
+}
+
+/* App Container */
+.app {
+  position: relative;
+  min-height: 100vh;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+/* Fixed Background */
+.app::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-color);
+  z-index: -2;
+  transition: background-color 0.3s ease;
+}
+
+/* Fixed Animated Background */
+.app::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(182, 42, 45, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(213, 87, 94, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(230, 168, 168, 0.1) 0%, transparent 50%);
+  background-size: 100% 100%;
+  z-index: -1;
+  pointer-events: none;
+  animation: backgroundPulse 20s ease-in-out infinite;
+}
+
+@keyframes backgroundPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.main-content {
+  position: relative;
+  padding-top: 100px;
+  min-height: 100vh;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 20px;
+    padding-bottom: 90px;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better scroll performance */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optimize scrolling elements */
+.main-content {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(182, 42, 45, 0.5);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(182, 42, 45, 0.7);
+}
+
+/* Selection */
+::selection {
+  background: rgba(182, 42, 45, 0.3);
+  color: var(--text-color);
+}
+
+/* Focus visible */
+:focus-visible {
+  outline: 2px solid #B62A2D;
+  outline-offset: 2px;
+}

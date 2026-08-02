@@ -1,0 +1,749 @@
+/* =======================================================================
+   SellerHub.css — Unified design system for ALL Seller Hub pages.
+   This mirrors AdminDashboard.css exactly so both dashboards feel
+   like one product. Never hardcode colours — always use theme tokens.
+   ======================================================================= */
+
+/* ── Layout ────────────────────────────────────────────────────────────── */
+.seller-layout {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  background: var(--bg-main);
+  z-index: 500;
+  overflow: hidden;
+}
+
+.seller-content {
+  flex: 1;
+  padding: 5rem 2rem 2rem 2rem;
+  margin-left: 280px;
+  background: var(--bg-main);
+  transition: margin-left 0.3s ease;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* ── Page Header (mirrors .admin-header) ────────────────────────────────── */
+.seller-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+}
+
+.seller-header-content h1 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.seller-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.seller-header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* ── User Badge (mirrors .admin-user-badge) ─────────────────────────────── */
+.seller-user-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, rgba(182, 42, 45, 0.1) 0%, rgba(213, 87, 94, 0.1) 100%);
+  border: 1px solid rgba(182, 42, 45, 0.2);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.seller-user-badge:hover {
+  background: linear-gradient(135deg, rgba(182, 42, 45, 0.15) 0%, rgba(213, 87, 94, 0.15) 100%);
+  border-color: rgba(182, 42, 45, 0.3);
+}
+
+.seller-user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #B62A2D 0%, #D5575E 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.seller-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.seller-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.seller-user-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.seller-user-role {
+  font-size: 0.8rem;
+  color: #D5575E;
+  font-weight: 500;
+}
+
+/* ── Stat Cards (mirrors .stats-grid / .stat-card) ─────────────────────── */
+.seller-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.seller-stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 1.75rem;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.seller-stat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.seller-stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.seller-stat-change {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #10b981;
+  padding: 0.4rem 0.8rem;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 20px;
+}
+
+.seller-stat-change.negative {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.seller-stat-change.neutral {
+  color: var(--text-secondary);
+  background: rgba(128, 128, 128, 0.1);
+}
+
+.seller-stat-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.seller-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #B62A2D 0%, #D5575E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.seller-stat-label {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Dashboard / Content Grid (mirrors .dashboard-grid) ─────────────────── */
+.seller-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* ── Panel Card (mirrors .dashboard-card) ───────────────────────────────── */
+.seller-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.seller-panel-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.seller-panel-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.seller-panel-title svg {
+  color: #D5575E;
+}
+
+.seller-panel-body {
+  padding: 1.5rem;
+}
+
+/* ── Activity List (mirrors .activity-list / .activity-item) ────────────── */
+.seller-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.seller-activity-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+[data-theme="light"] .seller-activity-item {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.seller-activity-item:hover {
+  background: rgba(182, 42, 45, 0.05);
+}
+
+.seller-activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(182, 42, 45, 0.1) 0%, rgba(213, 87, 94, 0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #D5575E;
+  flex-shrink: 0;
+}
+
+.seller-activity-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.seller-activity-text {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.seller-activity-time {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* ── Quick Action Buttons (mirrors .action-button) ──────────────────────── */
+.seller-quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.seller-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  text-align: left;
+  width: 100%;
+}
+
+[data-theme="light"] .seller-action-btn {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.seller-action-btn:hover {
+  background: rgba(182, 42, 45, 0.08);
+  border-color: rgba(182, 42, 45, 0.3);
+}
+
+.seller-action-btn svg {
+  font-size: 1.25rem;
+  color: #D5575E;
+  flex-shrink: 0;
+}
+
+.seller-action-badge {
+  position: absolute;
+  right: 1rem;
+  background: linear-gradient(135deg, #B62A2D 0%, #D5575E 100%);
+  color: white;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* ── Primary CTA Button ─────────────────────────────────────────────────── */
+.seller-cta-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #B62A2D 0%, #D5575E 100%);
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(182, 42, 45, 0.3);
+}
+
+.seller-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(182, 42, 45, 0.4);
+}
+
+/* ── Data Table (mirrors admin .products-table) ──────────────────────────── */
+.seller-table-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.seller-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.seller-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.seller-table th {
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(182, 42, 45, 0.04);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.seller-table td {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.seller-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.seller-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.seller-table tbody tr:hover {
+  background: rgba(182, 42, 45, 0.04);
+}
+
+/* ── Search Bar (mirrors admin .search-input) ────────────────────────────── */
+.seller-search-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 420px;
+}
+
+.seller-search-wrapper svg {
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.seller-search-input {
+  width: 100%;
+  padding: 0.9rem 1rem 0.9rem 3.25rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.seller-search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.seller-search-input:focus {
+  outline: none;
+  border-color: rgba(182, 42, 45, 0.4);
+  box-shadow: 0 0 0 3px rgba(182, 42, 45, 0.08);
+}
+
+/* ── Filter Select ──────────────────────────────────────────────────────── */
+.seller-filter-select {
+  padding: 0.875rem 1.25rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 160px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23B4B0B8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 1rem) center;
+  padding-right: 2.5rem;
+}
+
+.seller-filter-select:focus {
+  outline: none;
+  border-color: rgba(182, 42, 45, 0.4);
+  box-shadow: 0 0 0 3px rgba(182, 42, 45, 0.08);
+}
+
+/* ── Status Pills (matches AdminDashboard badge style) ──────────────────── */
+.seller-badge {
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.seller-badge.available { background: rgba(16, 185, 129, 0.12); color: #10b981; }
+.seller-badge.sold      { background: rgba(239, 68, 68, 0.12); color: #ef4444; }
+.seller-badge.hidden    { background: rgba(107, 114, 128, 0.12); color: #9ca3af; }
+.seller-badge.draft     { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.seller-badge.archived  { background: rgba(239, 68, 68, 0.10); color: #ef4444; }
+.seller-badge.pending   { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.seller-badge.paid      { background: rgba(59, 130, 246, 0.12); color: #3b82f6; }
+.seller-badge.delivering{ background: rgba(99, 102, 241, 0.12); color: #818cf8; }
+.seller-badge.completed { background: rgba(16, 185, 129, 0.12); color: #10b981; }
+.seller-badge.cancelled { background: rgba(239, 68, 68, 0.12); color: #ef4444; }
+.seller-badge.refunded  { background: rgba(107, 114, 128, 0.12); color: #9ca3af; }
+
+/* ── Icon Action Buttons ────────────────────────────────────────────────── */
+.seller-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.seller-icon-btn.primary {
+  background: rgba(182, 42, 45, 0.1);
+  color: #D5575E;
+  border: 1px solid rgba(182, 42, 45, 0.2);
+}
+.seller-icon-btn.primary:hover { background: rgba(182, 42, 45, 0.2); }
+
+.seller-icon-btn.danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.seller-icon-btn.danger:hover { background: rgba(239, 68, 68, 0.2); }
+
+.seller-icon-btn.neutral {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+.seller-icon-btn.neutral:hover {
+  background: rgba(182, 42, 45, 0.08);
+  color: #D5575E;
+  border-color: rgba(182, 42, 45, 0.2);
+}
+
+/* ── Product cell (mirrors admin .product-cell) ─────────────────────────── */
+.seller-product-cell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 380px;
+}
+
+.seller-product-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+  background: var(--bg-main);
+}
+
+.seller-product-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+}
+
+.seller-product-meta {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+/* ── Price cell ─────────────────────────────────────────────────────────── */
+.seller-price {
+  font-weight: 600;
+  color: #10b981;
+  font-size: 1rem;
+}
+
+/* ── Empty State ────────────────────────────────────────────────────────── */
+.seller-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 1rem;
+  gap: 1rem;
+  color: var(--text-secondary);
+}
+
+.seller-empty svg {
+  font-size: 3rem;
+  opacity: 0.35;
+}
+
+.seller-empty p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ── Pagination ─────────────────────────────────────────────────────────── */
+.seller-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.seller-pagination-info {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.seller-pagination-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.seller-page-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.seller-page-btn:hover:not(:disabled) {
+  background: rgba(182, 42, 45, 0.08);
+  border-color: rgba(182, 42, 45, 0.3);
+}
+
+.seller-page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.seller-page-btn.active {
+  background: linear-gradient(135deg, #B62A2D 0%, #D5575E 100%);
+  border-color: transparent;
+  color: white;
+}
+
+/* ── Form Inputs ────────────────────────────────────────────────────────── */
+.seller-form-input,
+.seller-form-textarea,
+.seller-form-select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.seller-form-input::placeholder,
+.seller-form-textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+.seller-form-input:focus,
+.seller-form-textarea:focus,
+.seller-form-select:focus {
+  outline: none;
+  border-color: rgba(182, 42, 45, 0.4);
+  box-shadow: 0 0 0 3px rgba(182, 42, 45, 0.08);
+}
+
+.seller-form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* ── Skeleton (mirrors AdminDashboard.css skeleton styles) ──────────────── */
+@keyframes seller-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.seller-skeleton-box {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.10) 50%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  background-size: 600px 100%;
+  animation: seller-shimmer 1.6s infinite linear;
+  border-radius: 8px;
+}
+
+[data-theme="light"] .seller-skeleton-box {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.04) 25%,
+    rgba(0, 0, 0, 0.09) 50%,
+    rgba(0, 0, 0, 0.04) 75%
+  );
+  background-size: 600px 100%;
+}
+
+.seller-skeleton-stat {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 1.75rem;
+  pointer-events: none;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .seller-content {
+    margin-left: 0;
+    padding: 1.5rem;
+  }
+
+  .seller-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .seller-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .seller-header-actions {
+    width: 100%;
+  }
+
+  .seller-user-badge {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .seller-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seller-content {
+    padding: 1rem;
+  }
+}

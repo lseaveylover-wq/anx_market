@@ -1,0 +1,405 @@
+/* High Specificity Custom Catalog & Responsive Sizing System */
+
+#root .catalog-container {
+  max-width: 1320px !important;
+  margin: 0 auto !important;
+  padding: 0 1.25rem !important;
+  box-sizing: border-box !important;
+}
+
+@media screen and (min-width: 769px) {
+  #root .catalog-container {
+    padding: 0 2rem !important;
+  }
+}
+
+/* Grid Layout: Responsive columns maintaining uniform card sizes across Web, Tablet, and Mobile */
+#root .anx-custom-catalog-grid {
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: 1.25rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media screen and (max-width: 1280px) {
+  #root .anx-custom-catalog-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 1.15rem !important;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  #root .anx-custom-catalog-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1rem !important;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  #root .anx-custom-catalog-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.9rem !important;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  #root .anx-custom-catalog-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+}
+
+/* Custom Product Card Component Styling */
+#root .anx-shoe-card {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  max-width: 260px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+
+#root .anx-shoe-card:hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(182, 42, 45, 0.4) !important;
+  box-shadow: 0 10px 25px rgba(182, 42, 45, 0.15) !important;
+}
+
+#root .anx-shoe-card-img-box {
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  background: var(--bg-main) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  padding: 0.75rem !important;
+  box-sizing: border-box !important;
+}
+
+#root .anx-shoe-card-img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  border-radius: 10px !important;
+}
+
+#root .anx-shoe-card-placeholder {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, rgba(182, 42, 45, 0.15) 0%, rgba(213, 87, 94, 0.2) 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 2.2rem !important;
+  font-weight: 800 !important;
+  color: #D5575E !important;
+}
+
+#root .anx-shoe-card-body {
+  padding: 0.8rem 0.9rem 0.9rem 0.9rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.4rem !important;
+  background: var(--bg-surface) !important;
+  flex: 1 !important;
+  justify-content: space-between !important;
+}
+
+#root .anx-shoe-card-title {
+  margin: 0 !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  line-height: 1.35 !important;
+  display: -webkit-box !important;
+  line-clamp: 2 !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+#root .anx-shoe-card-rating {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.2rem !important;
+}
+
+#root .anx-shoe-card-star {
+  font-size: 0.78rem !important;
+  color: #f59e0b !important;
+  fill: #f59e0b !important;
+}
+
+#root .anx-shoe-card-rating-text {
+  font-size: 0.75rem !important;
+  color: var(--text-secondary) !important;
+  font-weight: 500 !important;
+  margin-left: 0.2rem !important;
+}
+
+#root .anx-shoe-card-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-top: 0.2rem !important;
+  padding-top: 0.2rem !important;
+}
+
+#root .anx-shoe-card-price-box {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 0.25rem !important;
+}
+
+#root .anx-shoe-card-price {
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  color: var(--text-primary) !important;
+}
+
+#root .anx-shoe-card-currency {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  color: var(--text-secondary) !important;
+}
+
+#root .anx-shoe-card-eye-btn {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: var(--bg-main) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.95rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+#root .anx-shoe-card-eye-btn:hover {
+  background: linear-gradient(135deg, #B62A2D 0%, #D5575E 100%) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+  transform: scale(1.1) !important;
+}
+
+/* ── High-Specificity Product Detail Modal Styles ── */
+#root .modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 1rem !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+}
+
+#root .product-detail-modal {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 24px !important;
+  width: 100% !important;
+  max-width: 500px !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  padding: 1.5rem !important;
+  position: relative !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+  color: var(--text-primary) !important;
+  margin: auto !important;
+  box-sizing: border-box !important;
+}
+
+#root .modal-close-btn {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  position: absolute !important;
+  top: 1rem !important;
+  right: 1rem !important;
+  background: var(--bg-main) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 1.1rem !important;
+  z-index: 10 !important;
+}
+
+#root .modal-category-badge {
+  background: rgba(182, 42, 45, 0.15) !important;
+  color: #D5575E !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  padding: 0.25rem 0.75rem !important;
+  border-radius: 12px !important;
+  display: inline-block !important;
+  margin-bottom: 0.5rem !important;
+}
+
+#root .modal-header h2 {
+  font-size: 1.3rem !important;
+  font-weight: 800 !important;
+  margin: 0 0 1.1rem 0 !important;
+  line-height: 1.35 !important;
+  color: var(--text-primary) !important;
+  padding-right: 2rem !important;
+}
+
+#root .modal-specs-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 0.75rem !important;
+  margin-bottom: 1.1rem !important;
+}
+
+#root .spec-box {
+  background: var(--bg-main) !important;
+  padding: 0.75rem 0.9rem !important;
+  border-radius: 14px !important;
+  border: 1px solid var(--border-color) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.2rem !important;
+}
+
+#root .spec-label {
+  display: block !important;
+  font-size: 0.75rem !important;
+  color: var(--text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+#root .spec-value {
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+}
+
+#root .modal-description {
+  margin-bottom: 1.1rem !important;
+}
+
+#root .modal-description h4 {
+  margin: 0 0 0.4rem 0 !important;
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+}
+
+#root .modal-description p {
+  margin: 0 !important;
+  color: var(--text-secondary) !important;
+  font-size: 0.88rem !important;
+  line-height: 1.5 !important;
+}
+
+#root .modal-security-badge {
+  background: rgba(16, 185, 129, 0.1) !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
+  border-radius: 14px !important;
+  padding: 0.85rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  margin-bottom: 1.1rem !important;
+}
+
+#root .modal-security-badge strong {
+  color: #10b981 !important;
+  font-size: 0.88rem !important;
+  display: block !important;
+}
+
+#root .modal-security-badge p {
+  margin: 0 !important;
+  font-size: 0.78rem !important;
+  color: var(--text-secondary) !important;
+}
+
+#root .modal-footer {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.9rem !important;
+  border-top: 1px solid var(--border-color) !important;
+  padding-top: 1rem !important;
+}
+
+#root .modal-footer-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+}
+
+#root .modal-price-tag .price-label {
+  font-size: 0.72rem !important;
+  color: var(--text-secondary) !important;
+  display: block !important;
+}
+
+#root .modal-price-tag .price-amount {
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: var(--text-primary) !important;
+}
+
+#root .modal-buy-btn {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background: linear-gradient(135deg, #B62A2D 0%, #D5575E 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0.85rem 1.5rem !important;
+  border-radius: 50px !important;
+  font-weight: 800 !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  box-shadow: 0 6px 20px rgba(182, 42, 45, 0.4) !important;
+  width: 100% !important;
+  transition: transform 0.15s ease !important;
+}
+
+#root .modal-buy-btn:hover {
+  transform: scale(1.02) !important;
+}

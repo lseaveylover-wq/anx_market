@@ -1,0 +1,106 @@
+/* Orders Page */
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table thead {
+  background: rgba(182, 42, 45, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.orders-table th {
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(182, 42, 45, 0.05);
+}
+
+.orders-table td {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.orders-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.order-id {
+  font-weight: 600;
+  color: #D5575E;
+  font-family: 'Courier New', monospace;
+}
+
+.customer-cell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.customer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #B62A2D 0%, #D5575E 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.customer-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.customer-name {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.customer-email {
+  font-size: 0.85rem;
+  color: var(--neutral-color);
+}
+
+.amount-cell {
+  font-weight: 600;
+  color: #10b981;
+  font-size: 1.1rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-badge svg {
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .orders-table {
+    min-width: 900px;
+  }
+}

@@ -1,0 +1,208 @@
+.contact-page {
+  min-height: 100vh;
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.contact-hero {
+  text-align: center;
+  padding: 4rem 1.5rem 3rem;
+  background: transparent;
+}
+
+.contact-hero-content h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 1rem 0;
+  color: var(--text-primary);
+}
+
+.contact-hero-content p {
+  color: var(--text-secondary);
+  font-size: 1.15rem;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.contact-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.contact-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.contact-info-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease;
+}
+
+.contact-info-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(182, 42, 45, 0.35);
+}
+
+.contact-icon-wrapper {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: rgba(182, 42, 45, 0.15);
+  color: #D5575E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 1.25rem;
+}
+
+.contact-info-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+}
+
+.contact-info-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0 0 1rem 0;
+}
+
+.contact-link {
+  color: #D5575E;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.contact-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+@media (max-width: 900px) {
+  .contact-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-form-panel, .contact-faq-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 2.25rem;
+  box-shadow: var(--shadow);
+}
+
+.contact-form-panel h2, .contact-faq-panel h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 0.4rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-primary);
+}
+
+.form-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+
+.contact-input, .contact-select, .contact-textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.contact-input::placeholder, .contact-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.contact-input:focus, .contact-select:focus, .contact-textarea:focus {
+  border-color: #B62A2D;
+}
+
+.contact-submit-btn {
+  width: 100%;
+  padding: 0.95rem;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #B62A2D 0%, #D5575E 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 8px 25px rgba(182, 42, 45, 0.35);
+  transition: transform 0.15s ease;
+}
+
+.contact-submit-btn:hover {
+  transform: scale(1.02);
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.faq-item {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+
+.faq-item h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+}
+
+.faq-item p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
