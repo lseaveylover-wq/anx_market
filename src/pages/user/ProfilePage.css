@@ -244,3 +244,55 @@
   opacity: 0.7;
   padding: 1.5rem 0 0 0;
 }
+
+/* ── Dark Mode row ─────────────────────────────────────── */
+.dark-mode-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.5rem;
+}
+
+.dark-mode-icon {
+  color: var(--text-color);
+}
+
+/* ── Facebook-style toggle switch ─────────────────────── */
+.fb-toggle {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: #b0b3b8;        /* off = grey */
+  transition: background 0.25s ease;
+  flex-shrink: 0;
+  padding: 0;
+  outline: none;
+}
+
+.fb-toggle:focus-visible {
+  box-shadow: 0 0 0 3px rgba(182, 42, 45, 0.4);
+}
+
+.fb-toggle--on {
+  background: #B62A2D;         /* on = brand red */
+}
+
+.fb-toggle__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
+}
+
+.fb-toggle--on .fb-toggle__thumb {
+  transform: translateX(24px);
+}

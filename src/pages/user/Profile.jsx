@@ -13,7 +13,8 @@ import {
   FiHelpCircle,
   FiShield,
   FiLogOut,
-  FiChevronRight
+  FiChevronRight,
+  FiMoon
 } from 'react-icons/fi';
 import BecomeSellerModal from '../../components/common/BecomeSellerModal';
 import toast from 'react-hot-toast';
@@ -23,6 +24,29 @@ const Profile = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
+
+  // Dark mode — persisted in localStorage, no backend needed
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved === 'dark';
+    return document.body.classList.contains('dark-mode');
+  });
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(prev => {
+      const next = !prev;
+      if (next) {
+        document.body.classList.add('dark-mode');
+        document.body.classList.remove('light-mode');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.classList.remove('dark-mode');
+        document.body.classList.add('light-mode');
+        localStorage.setItem('theme', 'light');
+      }
+      return next;
+    });
+  };
 
   const handleLogout = async () => {
     try {
@@ -201,7 +225,31 @@ const Profile = () => {
           </div>
         </motion.div>
 
-        {/* Section 3: Log Out Button */}
+        {/* Section 3: Dark Mode Toggle */}
+        <motion.div
+          className="profile-group-card"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+        >
+          <div className="dark-mode-row">
+            <div className="item-left">
+              <FiMoon className="item-icon dark-mode-icon" />
+              <span className="item-label">Dark mode</span>
+            </div>
+            <button
+              className={`fb-toggle ${isDarkMode ? 'fb-toggle--on' : ''}`}
+              onClick={toggleDarkMode}
+              aria-label="Toggle dark mode"
+              role="switch"
+              aria-checked={isDarkMode}
+            >
+              <span className="fb-toggle__thumb" />
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Section 4: Log Out Button */}
         <motion.div
           className="profile-group-card logout-card"
           initial={{ opacity: 0, y: 15 }}
