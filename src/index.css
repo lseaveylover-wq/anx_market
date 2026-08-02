@@ -93,6 +93,20 @@ body {
   min-height: 100vh;
 }
 
+/* Smooth theme transition — applied to EVERY element for 350ms during toggle */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    fill 300ms ease !important;
+  transition-delay: 0ms !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

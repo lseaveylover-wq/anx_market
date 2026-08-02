@@ -9,10 +9,18 @@ export const ThemeProvider = ({ children }) => {
     return savedTheme || 'dark';
   });
 
-  // Apply theme to document
+  // Apply theme to document with smooth transition
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    const root = document.documentElement;
+    // Add transition class BEFORE changing the attribute so CSS animates
+    root.classList.add('theme-transitioning');
+    root.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
+    // Remove the transition class after animation completes
+    const timer = setTimeout(() => {
+      root.classList.remove('theme-transitioning');
+    }, 350);
+    return () => clearTimeout(timer);
   }, [theme]);
 
   // Toggle between light and dark
