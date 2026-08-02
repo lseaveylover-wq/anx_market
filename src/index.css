@@ -5,53 +5,7 @@
 
 /* CSS Variables for Theme System */
 :root {
-  /* Light Theme */
-  --bg-main: #F0F0F0;
-  --bg-primary: var(--bg-main);
-  --bg-surface: #FFFFFF;
-  --bg-overlay: rgba(255, 255, 255, 0.4);
-  --text-primary: #1a1a1a;
-  --text-color: var(--text-primary);
-  --text-secondary: #7A707D;
-  --neutral-color: var(--text-secondary);
-  --text-muted: #999;
-  --border-color: rgba(0, 0, 0, 0.1);
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.1);
-  --bg-dark: var(--bg-main);
-  --skeleton-base: #e2e8f0;
-  --skeleton-highlight: #f1f5f9;
-  
-  /* Brand Colors */
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --success: #22c55e;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --info: #3b82f6;
-  
-  /* Spacing */
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 1rem;
-  --spacing-md: 1.5rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 3rem;
-  
-  /* Border Radius */
-  --radius-sm: 0.5rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.5rem;
-  --radius-xl: 2rem;
-  --radius-pill: 50rem;
-  
-  /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 350ms ease;
-}
-
-/* Dark Theme */
-[data-theme="dark"] {
+  /* Dark Theme (default — applies on mobile, tablet, and desktop) */
   --bg-main: #110F1B;
   --bg-primary: var(--bg-main);
   --bg-surface: #1a1825;
@@ -67,6 +21,52 @@
   --bg-dark: var(--bg-main);
   --skeleton-base: rgba(255, 255, 255, 0.05);
   --skeleton-highlight: rgba(255, 255, 255, 0.12);
+
+  /* Brand Colors */
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-pill: 50rem;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
+}
+
+/* Light Theme override */
+[data-theme="light"] {
+  --bg-main: #F0F0F0;
+  --bg-primary: var(--bg-main);
+  --bg-surface: #FFFFFF;
+  --bg-overlay: rgba(255, 255, 255, 0.4);
+  --text-primary: #1a1a1a;
+  --text-color: var(--text-primary);
+  --text-secondary: #7A707D;
+  --neutral-color: var(--text-secondary);
+  --text-muted: #999;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.1);
+  --bg-dark: var(--bg-main);
+  --skeleton-base: #e2e8f0;
+  --skeleton-highlight: #f1f5f9;
 }
 
 /* Reset & Base Styles */
