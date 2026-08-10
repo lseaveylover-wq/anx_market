@@ -77,7 +77,7 @@ export const handleMockRequest = async (config) => {
       name: data.name || 'New Member',
       email: data.email || 'user@demo.com',
       role: 'user',
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100',
+      avatar: '/customer-avatar.jpg',
       store_credit: 50.00,
       points: 100,
       created_at: new Date().toISOString()

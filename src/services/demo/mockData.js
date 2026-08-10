@@ -6,7 +6,7 @@ export const DEMO_USERS = {
     name: 'Alex Mercer',
     email: 'customer@demo.com',
     role: 'user',
-    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80',
+    avatar: '/customer-avatar.jpg',
     store_credit: 150.00,
     points: 730,
     created_at: '2026-01-15T10:00:00Z'
@@ -337,7 +337,7 @@ export const DEMO_NOTIFICATIONS = [
 export const DEMO_MESSAGES = [
   {
     id: 1,
-    user: { id: 101, name: 'Alex Mercer', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100' },
+    user: { id: 101, name: 'Alex Mercer', avatar: '/customer-avatar.jpg' },
     last_message: 'Is the Valorant account email changeable right away?',
     updated_at: '2026-08-02T17:45:00Z',
     unread: 1,
