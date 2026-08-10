@@ -12,17 +12,16 @@ const api = axios.create({
   },
 });
 
-// Custom adapter: routes requests to mock engine when Demo Mode is active
-const defaultAdapter = axios.defaults.adapter;
+// Obtain built-in Axios transport adapter (XHR in browser, HTTP in Node)
+const builtInAdapter = axios.getAdapter(['xhr', 'http']);
 
+// Custom adapter: routes requests to mock engine when Demo Mode is active
 api.defaults.adapter = async (config) => {
+  await backendDetector.waitForInitialCheck();
   if (backendDetector.isDemoMode) {
     return handleMockRequest(config);
   }
-  if (typeof defaultAdapter === 'function') {
-    return defaultAdapter(config);
-  }
-  return axios.getAdapter('http')(config);
+  return builtInAdapter(config);
 };
 
 // Request interceptor - Add auth token

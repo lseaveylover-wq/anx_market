@@ -4,11 +4,25 @@ import axios from 'axios';
 
 class BackendDetector {
   constructor() {
-    this.isDemoMode = true; // Default to Demo Mode until backend health is verified
+    this.isDemoMode = false; // Default to real mode when configured, pending health check
     this.isChecking = true;
     this.listeners = new Set();
     this.pollInterval = null;
     this.failedCount = 0;
+    
+    // Create initial check promise so api adapter can wait if needed
+    this.initialCheckPromise = new Promise((resolve) => {
+      this._resolveInitialCheck = resolve;
+    });
+  }
+
+  async waitForInitialCheck() {
+    if (!this.isChecking) return;
+    try {
+      await this.initialCheckPromise;
+    } catch (e) {
+      // Ignore error
+    }
   }
 
   // Subscribe to mode changes
@@ -32,35 +46,70 @@ class BackendDetector {
     // If no backend URL configured (e.g. Vercel deployment), lock in Demo Mode
     if (!baseUrl || baseUrl.trim() === '') {
       this.setMode(true);
+      if (this._resolveInitialCheck) this._resolveInitialCheck();
       return true;
     }
 
-    try {
-      // Short ping timeout (2.5s) to avoid UI blocking
-      const pingUrl = `${baseUrl.replace(/\/+$/, '')}/categories`;
-      const res = await axios.get(pingUrl, { timeout: 2500 });
+    // Build candidate ping URLs (handle health & categories endpoints, plus localhost vs 127.0.0.1 on Windows)
+    const cleanUrl = baseUrl.replace(/\/+$/, '');
+    const pingUrls = [
+      `${cleanUrl}/health`,
+      `${cleanUrl}/categories`
+    ];
+    if (cleanUrl.includes('localhost')) {
+      pingUrls.push(`${cleanUrl.replace('localhost', '127.0.0.1')}/health`);
+      pingUrls.push(`${cleanUrl.replace('localhost', '127.0.0.1')}/categories`);
+    } else if (cleanUrl.includes('127.0.0.1')) {
+      pingUrls.push(`${cleanUrl.replace('127.0.0.1', 'localhost')}/health`);
+      pingUrls.push(`${cleanUrl.replace('127.0.0.1', 'localhost')}/categories`);
+    }
 
-      if (res.status === 200 || res.status === 204) {
-        this.failedCount = 0;
-        this.setMode(false); // Live Backend is available -> Real Mode!
-        return false;
+    let healthy = false;
+    for (const pingUrl of pingUrls) {
+      try {
+        const res = await axios.get(pingUrl, { timeout: 3000 });
+        if (res.status >= 200 && res.status < 300) {
+          healthy = true;
+          break;
+        }
+      } catch (err) {
+        // Continue to next candidate URL
       }
-    } catch (err) {
+    }
+
+    if (healthy) {
+      this.failedCount = 0;
+      this.setMode(false); // Live Backend is available -> Real Mode!
+    } else {
       this.failedCount++;
-      // Require 2 consecutive failed health pings to switch to Demo Mode to prevent transient network glitched mode flipping
-      if (this.failedCount >= 1) {
+      // Require 2 consecutive failed health pings to switch to Demo Mode
+      if (this.failedCount >= 2) {
         this.setMode(true); // Backend offline -> Demo Mode!
       }
-    } finally {
-      this.isChecking = false;
-      this.notify();
     }
+
+    this.isChecking = false;
+    if (this._resolveInitialCheck) {
+      this._resolveInitialCheck();
+    }
+    this.notify();
+    return !healthy;
   }
 
   setMode(isDemo) {
     if (this.isDemoMode !== isDemo || this.isChecking) {
       this.isDemoMode = isDemo;
       this.isChecking = false;
+
+      // Purge fake demo tokens when running in Real Mode
+      if (!isDemo) {
+        const token = localStorage.getItem('token');
+        if (token && token.startsWith('demo-jwt-token')) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      }
+
       console.log(
         `%c[ANX System] Mode Active: ${isDemo ? '⚠️ DEMO MODE (Mock Engine)' : '⚡ REAL MODE (PHP Backend)'}`,
         `color: ${isDemo ? '#f59e0b' : '#10b981'}; font-weight: bold; font-size: 12px;`
@@ -90,3 +139,4 @@ class BackendDetector {
 export const backendDetector = new BackendDetector();
 backendDetector.startPolling();
 export default backendDetector;
+

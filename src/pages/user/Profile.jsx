@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useRegion } from '../../contexts/RegionContext';
 import {
   FiUser,
   FiFileText,
@@ -22,31 +24,10 @@ import './ProfilePage.css';
 
 const Profile = () => {
   const { user, logout } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
+  const { selectedRegion } = useRegion();
   const navigate = useNavigate();
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
-
-  // Dark mode — persisted in localStorage, no backend needed
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved) return saved === 'dark';
-    return document.body.classList.contains('dark-mode');
-  });
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(prev => {
-      const next = !prev;
-      if (next) {
-        document.body.classList.add('dark-mode');
-        document.body.classList.remove('light-mode');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.body.classList.remove('dark-mode');
-        document.body.classList.add('light-mode');
-        localStorage.setItem('theme', 'light');
-      }
-      return next;
-    });
-  };
 
   const handleLogout = async () => {
     try {
@@ -200,10 +181,10 @@ const Profile = () => {
           <h3 className="group-card-title">Support & Legal</h3>
 
           <div className="group-list">
-            <div className="group-list-item" onClick={() => toast('Language: English (US)')}>
+            <div className="group-list-item" onClick={() => navigate('/select-region')}>
               <div className="item-left">
                 <FiGlobe className="item-icon" />
-                <span className="item-label">Country & Language</span>
+                <span className="item-label">Country & Region</span>
               </div>
               <FiChevronRight className="item-chevron" />
             </div>
@@ -238,11 +219,11 @@ const Profile = () => {
               <span className="item-label">Dark mode</span>
             </div>
             <button
-              className={`fb-toggle ${isDarkMode ? 'fb-toggle--on' : ''}`}
-              onClick={toggleDarkMode}
+              className={`fb-toggle ${isDark ? 'fb-toggle--on' : ''}`}
+              onClick={toggleTheme}
               aria-label="Toggle dark mode"
               role="switch"
-              aria-checked={isDarkMode}
+              aria-checked={isDark}
             >
               <span className="fb-toggle__thumb" />
             </button>

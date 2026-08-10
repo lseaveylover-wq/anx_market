@@ -18,9 +18,12 @@ import {
   FiGrid,
   FiInfo,
   FiMail,
+  FiGlobe,
 } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useRegion } from '../../contexts/RegionContext';
+import RegionDropdown from '../common/RegionDropdown';
 import AuthModal from '../auth/AuthModal';
 import LottiePlayer from '../common/LottiePlayer';
 import './DynamicIslandNav.css';
@@ -28,6 +31,7 @@ import './DynamicIslandNav.css';
 const DynamicIslandNav = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { selectedRegion } = useRegion();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -254,8 +258,9 @@ const DynamicIslandNav = () => {
             </AnimatePresence>
           </div>
 
-          {/* Right Icon Actions: Theme Toggle (Desktop Only), Cart, User */}
+          {/* Right Icon Actions: Region Selector (Desktop Only), Theme Toggle (Desktop Only), Cart, User */}
           <div className="nav-actions">
+
             {/* Theme Toggle (Desktop Only) */}
             <motion.button
               className="nav-icon-btn theme-toggle desktop-only"
@@ -386,6 +391,25 @@ const DynamicIslandNav = () => {
                         <motion.div className="dropdown-item" whileHover={{ x: 5 }} onClick={() => { navigate('/settings'); setShowUserDropdown(false); }}>
                           <FiSettings />
                           <span>Settings</span>
+                        </motion.div>
+
+                        <motion.div
+                          className="dropdown-item"
+                          whileHover={{ x: 5 }}
+                          onClick={() => {
+                            if (isMobile) {
+                              navigate('/select-region');
+                            }
+                            setShowUserDropdown(false);
+                          }}
+                        >
+                          <img
+                            src={selectedRegion.flag}
+                            alt={selectedRegion.name}
+                            className="circular-flag"
+                            style={{ width: '18px', height: '18px' }}
+                          />
+                          <span>Region: {selectedRegion.name}</span>
                         </motion.div>
 
                         {/* Facebook-style Theme Toggle */}

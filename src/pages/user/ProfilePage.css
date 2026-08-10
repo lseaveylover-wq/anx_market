@@ -296,3 +296,26 @@
 .fb-toggle--on .fb-toggle__thumb {
   transform: translateX(18px);
 }
+
+/* ── Profile Region Item ─────────────────────────────── */
+.profile-region-flag {
+  width: 26px;
+  height: 26px;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  aspect-ratio: 1 / 1;
+  border: 1.5px solid var(--border-color);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.profile-item-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-item-sublabel {
+  font-size: 0.78rem;
+  color: var(--neutral-color);
+  margin-top: 0.1rem;
+}

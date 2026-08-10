@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { RegionProvider } from './contexts/RegionContext';
 import DynamicIslandNav from './components/layouts/DynamicIslandNav';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -14,6 +15,7 @@ import PaymentFailed from './pages/public/PaymentFailed';
 import About from './pages/public/About';
 import Contact from './pages/public/Contact';
 import SearchPage from './pages/public/SearchPage';
+import RegionSelectPage from './pages/public/RegionSelectPage';
 import GoogleCallback from './pages/auth/GoogleCallback';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import SellerRequests from './pages/admin/SellerRequests';
@@ -59,25 +61,27 @@ function MainLayout() {
 function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <Router>
-          <div className="app">
-            <DynamicIslandNav />
-            <DemoModeBadge />
-            
-            <Routes>
-              {/* Main Site Routes wrapped in .main-content */}
-              <Route element={<MainLayout />}>
-                {/* Public Routes */}
-                <Route path="/" element={<Home />} />
-                <Route path="/products" element={<ProductsCatalog />} />
-                <Route path="/products/:id" element={<ProductDetailCheckout />} />
-                <Route path="/payment/success" element={<PaymentSuccess />} />
-                <Route path="/payment/failed" element={<PaymentFailed />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/auth/google/callback" element={<GoogleCallback />} />
+      <RegionProvider>
+        <AuthProvider>
+          <Router>
+            <div className="app">
+              <DynamicIslandNav />
+              <DemoModeBadge />
+              
+              <Routes>
+                {/* Main Site Routes wrapped in .main-content */}
+                <Route element={<MainLayout />}>
+                  {/* Public Routes */}
+                  <Route path="/" element={<Home />} />
+                  <Route path="/products" element={<ProductsCatalog />} />
+                  <Route path="/products/:id" element={<ProductDetailCheckout />} />
+                  <Route path="/payment/success" element={<PaymentSuccess />} />
+                  <Route path="/payment/failed" element={<PaymentFailed />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/search" element={<SearchPage />} />
+                  <Route path="/select-region" element={<RegionSelectPage />} />
+                  <Route path="/auth/google/callback" element={<GoogleCallback />} />
 
                 {/* Admin Routes */}
                 <Route 
@@ -219,8 +223,9 @@ function App() {
           </div>
         </Router>
       </AuthProvider>
-    </ThemeProvider>
-  );
+    </RegionProvider>
+  </ThemeProvider>
+);
 }
 
 export default App;
