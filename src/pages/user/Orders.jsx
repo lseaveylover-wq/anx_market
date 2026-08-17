@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -245,51 +246,52 @@ const Orders = () => {
               </div>
             </div>
 
-            {/* Product Specifications Grid */}
-            <div className="product-spec-section">
-              <h3 className="section-heading">Product Info</h3>
-              <div className="spec-grid-layout">
-                <div className="spec-info-card">
-                  <span className="spec-key">Delivery speed</span>
-                  <span className="spec-val-highlight">{currentProduct?.delivery_time || 'Instant'}</span>
-                </div>
-                <div className="spec-info-card">
-                  <span className="spec-key">Delivery method</span>
-                  <span className="spec-val-underlined">{currentProduct?.auto_delivery ?? true ? 'Auto delivery' : 'Manual delivery'}</span>
-                </div>
-                <div className="spec-info-card">
-                  <span className="spec-key">Platform</span>
-                  <span className="spec-val">{currentProduct?.platform || 'PC'}</span>
-                </div>
-                <div className="spec-info-card">
-                  <span className="spec-key">Server / Region</span>
-                  <span className="spec-val">{currentProduct?.server || currentProduct?.region || 'Global'}</span>
+            {/* Unified Product Info & Details Card (Matching Screenshot) */}
+            <div className="product-info-details-card">
+              {/* Product Info Section */}
+              <div className="product-spec-section">
+                <h3 className="section-heading">Product Info</h3>
+                <div className="spec-grid-layout">
+                  <div className="spec-info-card">
+                    <span className="spec-key">Delivery speed</span>
+                    <span className="spec-val-highlight">{currentProduct?.delivery_time || 'Instant'}</span>
+                  </div>
+                  <div className="spec-info-card">
+                    <span className="spec-key">Delivery method</span>
+                    <span className="spec-val-underlined">{currentProduct?.auto_delivery ?? true ? 'Auto delivery' : 'Manual delivery'}</span>
+                  </div>
+                  <div className="spec-info-card">
+                    <span className="spec-key">Platform</span>
+                    <span className="spec-val">{currentProduct?.platform || 'PC'}</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Product Description Details */}
-            <div className="product-description-section">
-              <h3 className="section-heading">Details</h3>
-              <div className={`description-text-body ${showFullDesc ? 'expanded' : ''}`}>
-                <p style={{ fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>
-                  {currentProduct?.category?.name || 'STEAM'} ACCOUNT DETAILS
-                </p>
-                <p style={{ marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
-                  What You Will Receive:
-                </p>
-                <p>
-                  {currentProduct?.long_description || currentProduct?.short_description || currentProduct?.description ||
-                    'Instant automated delivery upon payment confirmation. High reputation account with clean credentials, email access, and full warranty protection.'}
-                </p>
+              <div className="spec-card-divider" />
+
+              {/* Product Description Details */}
+              <div className="product-description-section">
+                <h3 className="section-heading">Details</h3>
+                <div className={`description-text-body ${showFullDesc ? 'expanded' : ''}`}>
+                  <p className="details-subheading">
+                    {currentProduct?.category?.name || 'STEAM'} ACCOUNT DETAILS
+                  </p>
+                  <p className="details-receive-label">
+                    What You Will Receive:
+                  </p>
+                  <p className="details-body-text">
+                    {currentProduct?.long_description || currentProduct?.short_description || currentProduct?.description ||
+                      'Instant automated delivery upon payment confirmation. High reputation account with clean credentials, email access, and full warranty protection.'}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="view-more-toggle"
+                  onClick={() => setShowFullDesc(!showFullDesc)}
+                >
+                  {showFullDesc ? 'Show less' : 'View more'}
+                </button>
               </div>
-              <button
-                type="button"
-                className="view-more-toggle"
-                onClick={() => setShowFullDesc(!showFullDesc)}
-              >
-                {showFullDesc ? 'Show less' : 'View more'}
-              </button>
             </div>
 
           </div>
@@ -385,23 +387,26 @@ const Orders = () => {
         </div>
       </div>
 
-      {/* Mobile Sticky Bottom Checkout Bar (Matching Screen 3) */}
-      <div className="mobile-checkout-sticky-bar">
-        <div className="mobile-total-info">
-          <span className="mobile-total-label">Total Amount</span>
-          <div className="mobile-total-val">
-            <span className="mobile-price-num">{totalAmount}</span>
-            <span className="mobile-price-curr">USD</span>
+      {/* Mobile Sticky Bottom Checkout Bar (Rendered on document.body to guarantee fixed viewport positioning) */}
+      {typeof document !== 'undefined' && createPortal(
+        <div className="mobile-checkout-sticky-bar">
+          <div className="mobile-total-info">
+            <span className="mobile-total-label">Total Amount</span>
+            <div className="mobile-total-val">
+              <span className="mobile-price-num">{totalAmount}</span>
+              <span className="mobile-price-curr">USD</span>
+            </div>
           </div>
-        </div>
-        <button
-          type="button"
-          className="mobile-checkout-btn"
-          onClick={() => handlePayNow(currentOrder)}
-        >
-          Checkout
-        </button>
-      </div>
+          <button
+            type="button"
+            className="mobile-checkout-btn"
+            onClick={() => handlePayNow(currentOrder)}
+          >
+            Checkout
+          </button>
+        </div>,
+        document.body
+      )}
 
       {/* Payment Modal (Bakong KHQR Exclusive) */}
       <PaymentModal

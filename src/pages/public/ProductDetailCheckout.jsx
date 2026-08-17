@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -221,45 +222,52 @@ const ProductDetailCheckout = () => {
               </div>
             </div>
 
-            {/* Product Specifications Grid */}
-            <div className="product-spec-section">
-              <h3 className="section-heading">Product Info</h3>
-              <div className="spec-grid-layout">
-                <div className="spec-info-card">
-                  <span className="spec-key">Delivery speed</span>
-                  <span className="spec-val-highlight">{product.delivery_time || 'Instant'}</span>
-                </div>
-                <div className="spec-info-card">
-                  <span className="spec-key">Delivery method</span>
-                  <span className="spec-val-underlined">{product.auto_delivery ? 'Auto delivery' : 'Manual delivery'}</span>
-                </div>
-                <div className="spec-info-card">
-                  <span className="spec-key">Platform</span>
-                  <span className="spec-val">{product.platform || 'PC / Mobile'}</span>
-                </div>
-                <div className="spec-info-card">
-                  <span className="spec-key">Server / Region</span>
-                  <span className="spec-val">{product.server || product.region || 'Global'}</span>
+            {/* Unified Product Info & Details Card (Matching Screenshot) */}
+            <div className="product-info-details-card">
+              {/* Product Info Section */}
+              <div className="product-spec-section">
+                <h3 className="section-heading">Product Info</h3>
+                <div className="spec-grid-layout">
+                  <div className="spec-info-card">
+                    <span className="spec-key">Delivery speed</span>
+                    <span className="spec-val-highlight">{product.delivery_time || 'Instant'}</span>
+                  </div>
+                  <div className="spec-info-card">
+                    <span className="spec-key">Delivery method</span>
+                    <span className="spec-val-underlined">{product.auto_delivery ?? true ? 'Auto delivery' : 'Manual delivery'}</span>
+                  </div>
+                  <div className="spec-info-card">
+                    <span className="spec-key">Platform</span>
+                    <span className="spec-val">{product.platform || 'PC'}</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Product Description Details */}
-            <div className="product-description-section">
-              <h3 className="section-heading">Details</h3>
-              <div className={`description-text-body ${showFullDesc ? 'expanded' : ''}`}>
-                <p>
-                  {product.long_description || product.short_description || product.description || 
-                   'Hello, after purchasing, we will send you your game account, password, bound email, email password, and login credentials. You can place orders 24 hours a day. Our customer service is online to answer your questions. After obtaining the account, please immediately change the recovery parameters.'}
-                </p>
+              <div className="spec-card-divider" />
+
+              {/* Product Description Details */}
+              <div className="product-description-section">
+                <h3 className="section-heading">Details</h3>
+                <div className={`description-text-body ${showFullDesc ? 'expanded' : ''}`}>
+                  <p className="details-subheading">
+                    {product.category?.name || 'STEAM'} ACCOUNT DETAILS
+                  </p>
+                  <p className="details-receive-label">
+                    What You Will Receive:
+                  </p>
+                  <p className="details-body-text">
+                    {product.long_description || product.short_description || product.description || 
+                     'Instant automated delivery upon payment confirmation. High reputation account with clean credentials, email access, and full warranty protection.'}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="view-more-toggle"
+                  onClick={() => setShowFullDesc(!showFullDesc)}
+                >
+                  {showFullDesc ? 'Show less' : 'View more'}
+                </button>
               </div>
-              <button
-                type="button"
-                className="view-more-toggle"
-                onClick={() => setShowFullDesc(!showFullDesc)}
-              >
-                {showFullDesc ? 'Show less' : 'View more'}
-              </button>
             </div>
 
           </div>
@@ -358,24 +366,27 @@ const ProductDetailCheckout = () => {
         </div>
       </div>
 
-      {/* Mobile Sticky Bottom Checkout Bar (Matching Screen 3) */}
-      <div className="mobile-checkout-sticky-bar">
-        <div className="mobile-total-info">
-          <span className="mobile-total-label">Total Amount</span>
-          <div className="mobile-total-val">
-            <span className="mobile-price-num">{totalPrice}</span>
-            <span className="mobile-price-curr">USD</span>
+      {/* Mobile Sticky Bottom Checkout Bar (Rendered on document.body to guarantee fixed viewport positioning) */}
+      {typeof document !== 'undefined' && createPortal(
+        <div className="mobile-checkout-sticky-bar">
+          <div className="mobile-total-info">
+            <span className="mobile-total-label">Total Amount</span>
+            <div className="mobile-total-val">
+              <span className="mobile-price-num">{totalPrice}</span>
+              <span className="mobile-price-curr">USD</span>
+            </div>
           </div>
-        </div>
-        <button
-          type="button"
-          className="mobile-checkout-btn"
-          onClick={handleCheckout}
-          disabled={buying}
-        >
-          {buying ? 'Processing...' : 'Checkout'}
-        </button>
-      </div>
+          <button
+            type="button"
+            className="mobile-checkout-btn"
+            onClick={handleCheckout}
+            disabled={buying}
+          >
+            {buying ? 'Processing...' : 'Checkout'}
+          </button>
+        </div>,
+        document.body
+      )}
 
       {/* Payment Modal */}
       <PaymentModal

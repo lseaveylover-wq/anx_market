@@ -130,8 +130,21 @@ const DynamicIslandNav = () => {
     }
   };
 
-  // Hide nav on seller and admin routes (placed AFTER all hooks)
-  if (location.pathname.startsWith('/seller') || location.pathname.startsWith('/admin')) {
+  // Hide nav on seller, admin, and payment callback routes
+  if (
+    location.pathname.startsWith('/seller') ||
+    location.pathname.startsWith('/admin') ||
+    location.pathname.startsWith('/payment')
+  ) {
+    return null;
+  }
+
+  // On checkout pages (/products/:id and /orders), hide ONLY on mobile view so the mobile fixed checkout bar is clear, but show on desktop/web view!
+  const isCheckoutPage =
+    (location.pathname.startsWith('/products/') && location.pathname !== '/products') ||
+    location.pathname === '/orders';
+
+  if (isCheckoutPage && isMobile) {
     return null;
   }
 

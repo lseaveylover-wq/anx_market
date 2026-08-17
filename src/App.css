@@ -85,8 +85,7 @@ html {
 
 /* Optimize scrolling elements */
 .main-content {
-  transform: translateZ(0);
-  will-change: transform;
+  /* Do not set transform on main-content as it breaks position: fixed */
 }
 
 /* Custom scrollbar */

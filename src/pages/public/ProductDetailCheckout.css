@@ -268,8 +268,19 @@
   background: #16a34a;
 }
 
-/* Product Specifications */
-.section-heading {
+/* Unified Product Info & Details Card Container */
+.product-info-details-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+}
+
+.product-spec-section .section-heading,
+.product-description-section .section-heading {
   font-size: 1.35rem;
   font-weight: 800;
   margin: 0 0 1.25rem 0;
@@ -279,9 +290,7 @@
 .spec-grid-layout {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--border-color);
+  gap: 1.25rem 2.5rem;
 }
 
 .spec-info-card {
@@ -294,12 +303,6 @@
   color: var(--text-muted);
   font-size: 0.88rem;
   font-weight: 500;
-}
-
-.spec-val {
-  color: var(--text-primary);
-  font-size: 1.05rem;
-  font-weight: 700;
 }
 
 .spec-val-highlight {
@@ -315,16 +318,52 @@
   text-decoration: underline;
 }
 
+.spec-val {
+  color: var(--text-primary);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.spec-card-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 1.75rem 0;
+  width: 100%;
+}
+
 /* Description Section */
 .product-description-section {
-  padding-top: 0.5rem;
+  padding-top: 0;
+}
+
+.details-subheading {
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin: 0 0 0.85rem 0;
+  letter-spacing: 0.02em;
+}
+
+.details-receive-label {
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.details-body-text {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .description-text-body {
   color: var(--text-secondary);
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   line-height: 1.6;
-  max-height: 90px;
+  max-height: 95px;
   overflow: hidden;
   position: relative;
   transition: max-height 0.3s ease;
@@ -342,8 +381,9 @@
   font-size: 0.92rem;
   text-decoration: underline;
   cursor: pointer;
-  padding: 0.5rem 0;
+  padding: 0.5rem 0 0 0;
   margin-top: 0.5rem;
+  align-self: flex-start;
 }
 
 /* Right Column Sidebar */
@@ -613,7 +653,7 @@ input:checked + .toggle-slider:before {
   color: var(--text-primary);
 }
 
-/* ── Mobile Responsive Rules (Matching Screen 3) ────────────────────────── */
+/* ── Responsive & Fixed Checkout Rules ────────────────────────── */
 .mobile-top-bar {
   display: none;
 }
@@ -622,7 +662,19 @@ input:checked + .toggle-slider:before {
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 1025px) {
+  .product-checkout-page {
+    padding-top: 6.5rem;
+  }
+
+  .checkout-sidebar {
+    position: sticky !important;
+    top: 6.5rem !important;
+    align-self: flex-start !important;
+  }
+}
+
+@media (max-width: 1024px) {
   .product-checkout-page {
     padding-top: 1rem !important;
     padding-bottom: 120px !important;
@@ -693,27 +745,30 @@ input:checked + .toggle-slider:before {
     justify-content: center;
   }
 
-  /* Hide duplicate total row and checkout button inside scrolled sidebar */
+  /* Hide duplicate total row and checkout button inside scrolled sidebar on mobile/tablet */
   .checkout-sidebar .checkout-total-row,
   .checkout-sidebar .main-checkout-btn {
-    display: none;
+    display: none !important;
   }
 
   /* Fixed Sticky Bottom Checkout Bar */
   .mobile-checkout-sticky-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.25rem;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background: #101117;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0.85rem 1.25rem;
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1.25rem !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    z-index: 99999 !important;
+    background: #111218 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding: 0.85rem 1.25rem !important;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.8) !important;
+    transform: translateZ(0) !important;
   }
 
   .mobile-total-info {
