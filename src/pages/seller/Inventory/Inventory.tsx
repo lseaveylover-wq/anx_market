@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { FiArchive, FiSearch, FiPlus, FiEdit2, FiAlertTriangle, FiPackage } from 'react-icons/fi';
+import { FiArchive, FiSearch, FiPlus, FiEdit2, FiEye, FiAlertTriangle, FiPackage } from 'react-icons/fi';
 import { sellerApi } from '../../../services/seller.api';
 import { Product } from '../../../types/seller.types';
 import { SkeletonBox } from '../../../components/common/Skeleton';
+import ViewProductModal from '../../../components/common/ViewProductModal';
 import '../SellerHub.css';
 
 const Inventory: React.FC = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [selectedProductForView, setSelectedProductForView] = useState<Product | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ['sellerInventory', { page, search }],
@@ -88,7 +90,7 @@ const Inventory: React.FC = () => {
                 <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <motion.tbody variants={container} initial="hidden" animate="visible">
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i}>
@@ -107,40 +109,52 @@ const Inventory: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                <motion.tbody variants={container} initial="hidden" animate="visible">
-                  {data.data.map((product: Product) => {
-                    const isLowStock = product.stock !== undefined && product.stock <= 2 && product.status !== 'hidden';
-                    return (
-                      <motion.tr key={product.id} variants={row}>
-                        <td>
-                          <div className="seller-product-cell">
-                            <img
-                              src={product.cover_image || 'https://via.placeholder.com/56'}
-                              alt={product.title}
-                              className="seller-product-thumb"
-                            />
-                            <div>
-                              <div className="seller-product-name">{product.title}</div>
-                              {isLowStock && (
-                                <div style={{ color: '#ef4444', fontSize: '0.8rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                                  <FiAlertTriangle /> Low Stock Warning
-                                </div>
-                              )}
-                            </div>
+                data.data.map((product: Product) => {
+                  const isLowStock = product.stock !== undefined && product.stock <= 2 && product.status !== 'hidden';
+                  const thumb = product.cover_image || product.image_url || product.image || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100';
+                  return (
+                    <motion.tr key={product.id} variants={row}>
+                      <td>
+                        <div className="seller-product-cell">
+                          <img
+                            src={thumb}
+                            alt={product.title}
+                            className="seller-product-thumb"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100';
+                            }}
+                          />
+                          <div>
+                            <div className="seller-product-name">{product.title}</div>
+                            {isLowStock && (
+                              <div style={{ color: '#ef4444', fontSize: '0.8rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                                <FiAlertTriangle /> Low Stock Warning
+                              </div>
+                            )}
                           </div>
-                        </td>
-                        <td style={{ textAlign: 'center', fontWeight: 700, fontSize: '1.1rem', color: isLowStock ? '#ef4444' : 'var(--text-primary)' }}>
-                          {product.stock ?? 1}
-                        </td>
-                        <td style={{ textAlign: 'center' }}>
-                          <span className={`seller-badge ${product.status}`}>
-                            {product.status}
-                          </span>
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
+                        </div>
+                      </td>
+                      <td style={{ textAlign: 'center', fontWeight: 700, fontSize: '1.1rem', color: isLowStock ? '#ef4444' : 'var(--text-primary)' }}>
+                        {product.stock ?? 1}
+                      </td>
+                      <td style={{ textAlign: 'center' }}>
+                        <span className={`seller-badge ${product.status}`}>
+                          {product.status}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: 'right' }}>
+                        <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'flex-end' }}>
+                          <motion.button
+                            className="seller-icon-btn neutral"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setSelectedProductForView(product)}
+                            title="View Product Details"
+                          >
+                            <FiEye />
+                          </motion.button>
                           <motion.button
                             className="seller-icon-btn primary"
-                            style={{ marginLeft: 'auto' }}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => navigate(`/seller/products/edit/${product.id}`)}
@@ -148,13 +162,13 @@ const Inventory: React.FC = () => {
                           >
                             <FiEdit2 />
                           </motion.button>
-                        </td>
-                      </motion.tr>
-                    );
-                  })}
-                </motion.tbody>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  );
+                })
               )}
-            </tbody>
+            </motion.tbody>
           </table>
         </div>
 
@@ -183,6 +197,14 @@ const Inventory: React.FC = () => {
           </div>
         )}
       </motion.div>
+
+      {/* View Product Details Pop-Up Modal */}
+      <ViewProductModal
+        isOpen={!!selectedProductForView}
+        onClose={() => setSelectedProductForView(null)}
+        product={selectedProductForView}
+        onEdit={(id) => navigate(`/seller/products/edit/${id}`)}
+      />
     </>
   );
 };

@@ -83,7 +83,42 @@ function App() {
                   <Route path="/select-region" element={<RegionSelectPage />} />
                   <Route path="/auth/google/callback" element={<GoogleCallback />} />
 
-                {/* Admin Routes */}
+                  {/* Protected User Routes */}
+                  <Route 
+                    path="/profile" 
+                    element={
+                      <ProtectedRoute>
+                        <UserProfile />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/orders" 
+                    element={
+                      <ProtectedRoute>
+                        <UserOrders />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/purchase-history" 
+                    element={
+                      <ProtectedRoute>
+                        <PurchaseHistory />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/settings" 
+                    element={
+                      <ProtectedRoute>
+                        <UserSettings />
+                      </ProtectedRoute>
+                    } 
+                  />
+                </Route>
+
+                {/* Admin Routes (Full-screen fixed layout with independent content scroll) */}
                 <Route 
                   path="/admin/dashboard" 
                   element={
@@ -140,41 +175,6 @@ function App() {
                     </ProtectedRoute>
                   } 
                 />
-
-                {/* Protected User Routes */}
-                <Route 
-                  path="/profile" 
-                  element={
-                    <ProtectedRoute>
-                      <UserProfile />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/orders" 
-                  element={
-                    <ProtectedRoute>
-                      <UserOrders />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/purchase-history" 
-                  element={
-                    <ProtectedRoute>
-                      <PurchaseHistory />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/settings" 
-                  element={
-                    <ProtectedRoute>
-                      <UserSettings />
-                    </ProtectedRoute>
-                  } 
-                />
-              </Route>
 
               {/* Seller Hub Layout */}
               <Route path="/seller" element={<SellerLayout />}>

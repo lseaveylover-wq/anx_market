@@ -29,10 +29,11 @@ export const useSellerStore = create<SellerState>((set) => ({
 
   fetchStats: async () => {
     try {
+      set({ isLoading: true, error: null });
       const stats = await sellerApi.getDashboardStats();
-      set({ stats });
+      set({ stats, isLoading: false });
     } catch (error: any) {
-      set({ error: error.message || 'Failed to fetch stats' });
+      set({ error: error.message || 'Failed to fetch stats', isLoading: false });
     }
   },
 

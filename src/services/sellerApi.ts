@@ -50,7 +50,13 @@ const sellerApi = {
     return response.data;
   },
 
-  updateProduct: async (id: number, data: Partial<CreateProductDto>): Promise<{ message: string; product: Product }> => {
+  updateProduct: async (id: number, data: any): Promise<{ message: string; product: Product }> => {
+    if (data instanceof FormData) {
+      const response = await api.post(`/seller/products/${id}`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return response.data;
+    }
     const response = await api.put(`/seller/products/${id}`, data);
     return response.data;
   },

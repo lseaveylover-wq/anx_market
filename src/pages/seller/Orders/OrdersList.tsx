@@ -113,7 +113,7 @@ const OrdersList: React.FC = () => {
                 <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <motion.tbody variants={container} initial="hidden" animate="visible">
               {isLoading ? (
                 Array.from({ length: 6 }).map((_, i) => (
                   <tr key={i}>
@@ -132,56 +132,54 @@ const OrdersList: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                <motion.tbody variants={container} initial="hidden" animate="visible">
-                  {data.data.map((order: Order) => (
-                    <motion.tr
-                      key={order.id}
-                      variants={row}
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => navigate(`/seller/orders/${order.id}`)}
-                    >
-                      <td style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
-                        #{order.order_number}
-                      </td>
-                      <td>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                          <img
-                            src={order.buyer?.avatar || `https://ui-avatars.com/api/?name=${order.buyer?.name || 'Buyer'}&background=B62A2D&color=fff`}
-                            alt={order.buyer?.name}
-                            style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover' }}
-                          />
-                          <span style={{ color: 'var(--text-primary)' }}>{order.buyer?.name || 'Unknown'}</span>
-                        </div>
-                      </td>
-                      <td className="seller-price">${Number(order.total_amount).toFixed(2)}</td>
-                      <td style={{ color: 'var(--text-secondary)' }}>
-                        {new Date(order.created_at).toLocaleDateString()}
-                      </td>
-                      <td>
-                        <span className={`seller-badge ${order.items?.[0]?.product?.auto_delivery ? 'paying' : 'delivering'}`}
-                          style={{ background: 'rgba(99,102,241,0.1)', color: '#818cf8' }}
-                        >
-                          {order.items?.[0]?.product?.auto_delivery ? '⚡ Auto' : '👤 Manual'}
-                        </span>
-                      </td>
-                      <td style={{ textAlign: 'center' }}>
-                        <span className={`seller-badge ${order.status}`}>{order.status}</span>
-                      </td>
-                      <td style={{ textAlign: 'right' }}>
-                        <motion.button
-                          className="seller-icon-btn primary"
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={e => { e.stopPropagation(); navigate(`/seller/orders/${order.id}`); }}
-                        >
-                          <FiEye />
-                        </motion.button>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </motion.tbody>
+                data.data.map((order: Order) => (
+                  <motion.tr
+                    key={order.id}
+                    variants={row}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => navigate(`/seller/orders/${order.id}`)}
+                  >
+                    <td style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
+                      #{order.order_number}
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                        <img
+                          src={order.buyer?.avatar || `https://ui-avatars.com/api/?name=${order.buyer?.name || 'Buyer'}&background=B62A2D&color=fff`}
+                          alt={order.buyer?.name}
+                          style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover' }}
+                        />
+                        <span style={{ color: 'var(--text-primary)' }}>{order.buyer?.name || 'Unknown'}</span>
+                      </div>
+                    </td>
+                    <td className="seller-price">${Number(order.total_amount).toFixed(2)}</td>
+                    <td style={{ color: 'var(--text-secondary)' }}>
+                      {new Date(order.created_at).toLocaleDateString()}
+                    </td>
+                    <td>
+                      <span className={`seller-badge ${order.items?.[0]?.product?.auto_delivery ? 'paying' : 'delivering'}`}
+                        style={{ background: 'rgba(99,102,241,0.1)', color: '#818cf8' }}
+                      >
+                        {order.items?.[0]?.product?.auto_delivery ? '⚡ Auto' : '👤 Manual'}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      <span className={`seller-badge ${order.status}`}>{order.status}</span>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <motion.button
+                        className="seller-icon-btn primary"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={e => { e.stopPropagation(); navigate(`/seller/orders/${order.id}`); }}
+                      >
+                        <FiEye />
+                      </motion.button>
+                    </td>
+                  </motion.tr>
+                ))
               )}
-            </tbody>
+            </motion.tbody>
           </table>
         </div>
 

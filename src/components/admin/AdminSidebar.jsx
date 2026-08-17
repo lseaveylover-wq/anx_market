@@ -13,7 +13,8 @@ import {
   FiMenu,
   FiX,
   FiSun,
-  FiMoon
+  FiMoon,
+  FiArrowLeft
 } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -65,8 +66,8 @@ const AdminSidebar = () => {
     },
   ];
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 
@@ -124,6 +125,18 @@ const AdminSidebar = () => {
 
         {/* Bottom Actions */}
         <div className="sidebar-footer">
+          {/* Back to Home */}
+          <motion.button
+            className="sidebar-action back-home"
+            onClick={() => navigate('/')}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            title="Return to Main Storefront"
+          >
+            <span className="nav-icon"><FiArrowLeft /></span>
+            <span className="nav-text">Back to Home</span>
+          </motion.button>
+
           {/* Theme Toggle */}
           <motion.button
             className="sidebar-action"

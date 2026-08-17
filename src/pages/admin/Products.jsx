@@ -182,7 +182,7 @@ const Products = () => {
                     </td>
                     <td>{product.seller?.name || 'N/A'}</td>
                     <td>{product.category?.name || 'N/A'}</td>
-                    <td className="price-cell">${product.price}</td>
+                    <td className="price-cell">${Number(product.price || 0).toFixed(2)}</td>
                     <td>
                       <span className={`status-badge ${product.status}`}>
                         {product.status}

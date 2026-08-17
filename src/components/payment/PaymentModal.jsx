@@ -4,32 +4,20 @@ import {
   FiX,
   FiShield,
   FiRefreshCw,
-  FiExternalLink,
-  FiCreditCard,
-  FiCheckCircle,
-  FiAlertTriangle,
-  FiLock
+  FiAlertTriangle
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
 import './PaymentModal.css';
 
 const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
-  const [selectedMethod, setSelectedMethod] = useState('bakong_khqr'); // 'bakong_khqr' or 'visa_card'
   const [paymentData, setPaymentData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [expired, setExpired] = useState(false);
   const [polling, setPolling] = useState(false);
-  const [visaCard, setVisaCard] = useState({
-    name: '',
-    number: '',
-    expiry: '',
-    cvc: ''
-  });
-  const [visaProcessing, setVisaProcessing] = useState(false);
 
-  // Initialize Payment when modal opens or method changes
+  // Initialize Payment when modal opens
   useEffect(() => {
     if (isOpen && order) {
       initPayment();
@@ -37,11 +25,11 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
       setPaymentData(null);
       setExpired(false);
     }
-  }, [isOpen, order, selectedMethod]);
+  }, [isOpen, order]);
 
   // Expiration Countdown Timer for KHQR
   useEffect(() => {
-    if (!paymentData || selectedMethod !== 'bakong_khqr' || expired) return;
+    if (!paymentData || expired) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -55,11 +43,11 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [paymentData, selectedMethod, expired]);
+  }, [paymentData, expired]);
 
   // Real-time 1-second backend MD5 verification polling & EventSource SSE stream
   useEffect(() => {
-    if (!paymentData || selectedMethod !== 'bakong_khqr' || expired || !paymentData.payment_id) return;
+    if (!paymentData || expired || !paymentData.payment_id) return;
 
     setPolling(true);
 
@@ -110,7 +98,7 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
       if (eventSource) eventSource.close();
       setPolling(false);
     };
-  }, [paymentData, selectedMethod, expired]);
+  }, [paymentData, expired]);
 
   const initPayment = async () => {
     setLoading(true);
@@ -119,7 +107,7 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
     try {
       const { data } = await api.post('/payments/initialize', {
         order_id: order.id,
-        payment_method: selectedMethod,
+        payment_method: 'bakong_khqr',
       });
       setPaymentData(data.data);
     } catch (err) {
@@ -146,45 +134,6 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
     }
   };
 
-  const handleSimulateBakongPay = async () => {
-    if (!paymentData?.payment_id) return;
-    try {
-      const { data } = await api.post(`/payments/${paymentData.payment_id}/simulate-bakong-pay`);
-      toast.success('Bakong KHQR Payment Simulated Successfully!');
-      if (onSuccess) onSuccess(data);
-      onClose();
-    } catch (err) {
-      toast.error('Simulation failed');
-    }
-  };
-
-  const handleVisaSubmit = async (e) => {
-    e.preventDefault();
-    if (!visaCard.name || !visaCard.number || !visaCard.expiry || !visaCard.cvc) {
-      toast.error('Please complete all card details');
-      return;
-    }
-
-    setVisaProcessing(true);
-    try {
-      // Tokenize card securely on client side and pass payment token
-      const mockToken = 'tok_visa_' + Math.random().toString(36).substring(2, 10);
-      const { data } = await api.post(`/payments/${paymentData.payment_id}/process-visa`, {
-        payment_token: mockToken,
-        card_type: 'Visa Credit/Debit',
-        last4: visaCard.number.slice(-4) || '4242',
-      });
-
-      toast.success('Visa Card authorized successfully!');
-      if (onSuccess) onSuccess(data);
-      onClose();
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Visa Card payment authorization failed');
-    } finally {
-      setVisaProcessing(false);
-    }
-  };
-
   if (!isOpen) return null;
 
   const formatTimer = (seconds) => {
@@ -206,29 +155,11 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
           {/* Header */}
           <div className="payment-modal-header">
             <div>
-              <h2>Marketplace Payment</h2>
+              <h2>Bakong KHQR Payment</h2>
               <p className="order-ref-text">Order #{order?.order_number || order?.id} • Total: <strong>${Number(order?.total_amount || 0).toFixed(2)} USD</strong></p>
             </div>
             <button className="modal-close-icon" onClick={onClose}>
               <FiX />
-            </button>
-          </div>
-
-          {/* Payment Method Selector Tabs */}
-          <div className="payment-tabs">
-            <button
-              className={`payment-tab-btn ${selectedMethod === 'bakong_khqr' ? 'active' : ''}`}
-              onClick={() => setSelectedMethod('bakong_khqr')}
-            >
-              <span className="tab-icon-badge bakong-badge">KHQR</span>
-              Bakong KHQR
-            </button>
-            <button
-              className={`payment-tab-btn ${selectedMethod === 'visa_card' ? 'active' : ''}`}
-              onClick={() => setSelectedMethod('visa_card')}
-            >
-              <FiCreditCard className="tab-icon" />
-              Visa Card
             </button>
           </div>
 
@@ -239,7 +170,7 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
                 <FiRefreshCw className="spin-icon" />
                 <p>Generating secure payment session...</p>
               </div>
-            ) : selectedMethod === 'bakong_khqr' ? (
+            ) : (
               /* Bakong KHQR View */
               <div className="khqr-container">
                 {expired ? (
@@ -263,10 +194,6 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
                       ) : (
                         <div className="khqr-placeholder">QR Code Error</div>
                       )}
-                      
-                      <div className="khqr-amount-badge">
-                        ${Number(paymentData?.amount || order?.total_amount || 0).toFixed(2)} USD
-                      </div>
                     </div>
 
                     <div className="khqr-timer-bar">
@@ -280,89 +207,9 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
                       <span>Merchant: <strong>ANX Marketplace</strong></span>
                       <span>Account: <strong>anx_marketplace@acleda</strong></span>
                     </div>
-
-                    {paymentData?.deeplink_url && (
-                      <a
-                        href={paymentData.deeplink_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="bakong-deeplink-btn"
-                      >
-                        <FiExternalLink /> Open in Bakong App
-                      </a>
-                    )}
-
-                    {/* Developer Sandbox Test Button */}
-                    <button
-                      type="button"
-                      className="sandbox-simulate-btn"
-                      onClick={handleSimulateBakongPay}
-                    >
-                      <FiCheckCircle /> Simulate KHQR Scan & Pay (Sandbox)
-                    </button>
                   </>
                 )}
               </div>
-            ) : (
-              /* Visa Card View (PCI DSS Form) */
-              <form onSubmit={handleVisaSubmit} className="visa-form-container">
-                <div className="visa-badge-row">
-                  <span className="pci-tag"><FiShield /> PCI DSS Level 1 Compliant</span>
-                  <span className="pci-tag"><FiLock /> 256-Bit SSL Encrypted</span>
-                </div>
-
-                <div className="form-field">
-                  <label>Cardholder Name *</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. John Doe"
-                    value={visaCard.name}
-                    onChange={(e) => setVisaCard({ ...visaCard, name: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label>Visa Card Number *</label>
-                  <input
-                    type="text"
-                    placeholder="4000 1234 5678 9010"
-                    maxLength={19}
-                    value={visaCard.number}
-                    onChange={(e) => setVisaCard({ ...visaCard, number: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="form-row-2">
-                  <div className="form-field">
-                    <label>Expiry (MM/YY) *</label>
-                    <input
-                      type="text"
-                      placeholder="12/28"
-                      maxLength={5}
-                      value={visaCard.expiry}
-                      onChange={(e) => setVisaCard({ ...visaCard, expiry: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label>CVC / CVV *</label>
-                    <input
-                      type="password"
-                      placeholder="123"
-                      maxLength={4}
-                      value={visaCard.cvc}
-                      onChange={(e) => setVisaCard({ ...visaCard, cvc: e.target.value })}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <button type="submit" className="visa-pay-btn" disabled={visaProcessing}>
-                  {visaProcessing ? 'Authorizing Visa Payment...' : `Pay $${Number(order?.total_amount || 0).toFixed(2)} USD via Visa`}
-                </button>
-              </form>
             )}
           </div>
 

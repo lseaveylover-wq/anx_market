@@ -130,6 +130,11 @@ const DynamicIslandNav = () => {
     }
   };
 
+  // Hide nav on seller and admin routes (placed AFTER all hooks)
+  if (location.pathname.startsWith('/seller') || location.pathname.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <>
       <AuthModal

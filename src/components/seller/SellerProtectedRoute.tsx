@@ -10,14 +10,16 @@ interface SellerProtectedRouteProps {
 
 const SellerProtectedRoute: React.FC<SellerProtectedRouteProps> = ({ children }) => {
   const navigate = useNavigate();
-  const { canAccess, isLoading, checkPermission, sellerRequest } = useSellerStore();
+  const { canAccess, checkPermission, sellerRequest } = useSellerStore();
   const [hasChecked, setHasChecked] = React.useState(false);
 
   useEffect(() => {
     checkPermission().finally(() => setHasChecked(true));
   }, [checkPermission]);
 
-  if (isLoading || !hasChecked) {
+  // Only gate on !hasChecked — isLoading is also set by fetchStats/fetchSettings
+  // and would incorrectly unmount the layout while data is loading.
+  if (!hasChecked) {
     return (
       <div className="container-fluid py-4" style={{ minHeight: '60vh' }}>
         <SkeletonDashboard />

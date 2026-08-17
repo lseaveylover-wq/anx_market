@@ -6,6 +6,7 @@ import { FiSearch, FiPlus, FiEdit2, FiEye, FiTrash2, FiPackage, FiFilter } from 
 import { sellerApi } from '../../../services/seller.api';
 import { Product } from '../../../types/seller.types';
 import { SkeletonBox } from '../../../components/common/Skeleton';
+import ViewProductModal from '../../../components/common/ViewProductModal';
 import toast from 'react-hot-toast';
 import '../SellerHub.css';
 
@@ -18,6 +19,7 @@ const ProductsList: React.FC = () => {
   const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedProductForView, setSelectedProductForView] = useState<Product | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ['sellerProducts', { page, status, search }],
@@ -186,7 +188,7 @@ const ProductsList: React.FC = () => {
                 <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <motion.tbody variants={container} initial="hidden" animate="visible">
               {isLoading ? (
                 Array.from({ length: 6 }).map((_, i) => (
                   <tr key={i}>
@@ -205,8 +207,9 @@ const ProductsList: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                <motion.tbody variants={container} initial="hidden" animate="visible">
-                  {data.data.map((product: Product) => (
+                data.data.map((product: Product) => {
+                  const thumb = product.cover_image || product.image_url || product.image || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100';
+                  return (
                     <motion.tr key={product.id} variants={row}>
                       <td>
                         <input
@@ -219,9 +222,12 @@ const ProductsList: React.FC = () => {
                       <td>
                         <div className="seller-product-cell">
                           <img
-                            src={product.cover_image || 'https://via.placeholder.com/56'}
+                            src={thumb}
                             alt={product.title}
                             className="seller-product-thumb"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100';
+                            }}
                           />
                           <div>
                             <div className="seller-product-name">{product.title}</div>
@@ -252,8 +258,8 @@ const ProductsList: React.FC = () => {
                             className="seller-icon-btn neutral"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
-                            onClick={() => window.open(`/products/${product.id}`, '_blank')}
-                            title="View Public"
+                            onClick={() => setSelectedProductForView(product)}
+                            title="View Product Details"
                           >
                             <FiEye />
                           </motion.button>
@@ -269,10 +275,10 @@ const ProductsList: React.FC = () => {
                         </div>
                       </td>
                     </motion.tr>
-                  ))}
-                </motion.tbody>
+                  );
+                })
               )}
-            </tbody>
+            </motion.tbody>
           </table>
         </div>
 
@@ -293,6 +299,14 @@ const ProductsList: React.FC = () => {
           </div>
         )}
       </motion.div>
+
+      {/* View Product Details Pop-Up Modal */}
+      <ViewProductModal
+        isOpen={!!selectedProductForView}
+        onClose={() => setSelectedProductForView(null)}
+        product={selectedProductForView}
+        onEdit={(id) => navigate(`/seller/products/edit/${id}`)}
+      />
     </>
   );
 };

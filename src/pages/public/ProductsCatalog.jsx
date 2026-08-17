@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiSearch, FiFilter, FiX, FiShield, FiCheckCircle, FiZap, FiLock, FiPlus, FiMinus } from 'react-icons/fi';
 import ProductCard from '../../components/common/ProductCard';
 import { SkeletonBox } from '../../components/common/Skeleton';
+import AuthModal from '../../components/auth/AuthModal';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import './ProductsCatalogCustom.css';
@@ -34,6 +35,7 @@ const ProductsCatalog = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalQuantity, setModalQuantity] = useState(1);
   const [buying, setBuying] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -106,13 +108,15 @@ const ProductsCatalog = () => {
   };
 
   const handleBuyNow = async (product, qty = 1) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setSelectedProduct(null);
+      setShowAuthModal(true);
+      return;
+    }
+
     setBuying(true);
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        toast.error('Please log in to purchase accounts!');
-        return;
-      }
       // Create order with product_ids array, quantity & payment method
       const { data } = await api.post('/orders', {
         product_ids: [product.id],
@@ -307,6 +311,12 @@ const ProductsCatalog = () => {
           </div>
         )}
       </AnimatePresence>
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode="login"
+      />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { FiMail, FiLock, FiUser, FiEye, FiEyeOff, FiX } from 'react-icons/fi';
@@ -99,7 +100,9 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
     }
   };
 
-  return (
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -108,17 +111,17 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.2 }}
         >
           <motion.div
             className="auth-modal-container"
-            initial={{ scale: 0.9, opacity: 0, y: 50 }}
+            initial={{ scale: 0.95, opacity: 0, y: 0 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 50 }}
+            exit={{ scale: 0.95, opacity: 0, y: 0 }}
             transition={{
               type: 'spring',
-              stiffness: 300,
-              damping: 30,
+              stiffness: 350,
+              damping: 28,
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -401,7 +404,8 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
           </div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 

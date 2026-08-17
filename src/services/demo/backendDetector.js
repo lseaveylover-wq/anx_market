@@ -4,31 +4,29 @@ import axios from 'axios';
 
 class BackendDetector {
   constructor() {
-    this.isDemoMode = false; // Default to real mode when configured, pending health check
-    this.isChecking = true;
+    this.isDemoMode = false;
+    this.isChecking = false;
     this.listeners = new Set();
     this.pollInterval = null;
     this.failedCount = 0;
     
-    // Create initial check promise so api adapter can wait if needed
-    this.initialCheckPromise = new Promise((resolve) => {
-      this._resolveInitialCheck = resolve;
-    });
+    // Resolve initial check immediately if base URL is present to prevent blocking Axios adapter
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL;
+    if (baseUrl && baseUrl.trim() !== '') {
+      this.initialCheckPromise = Promise.resolve();
+    } else {
+      this.isDemoMode = true;
+      this.initialCheckPromise = Promise.resolve();
+    }
   }
 
   async waitForInitialCheck() {
-    if (!this.isChecking) return;
-    try {
-      await this.initialCheckPromise;
-    } catch (e) {
-      // Ignore error
-    }
+    return Promise.resolve();
   }
 
   // Subscribe to mode changes
   subscribe(listener) {
     this.listeners.add(listener);
-    // Immediately emit current state
     listener({ isDemoMode: this.isDemoMode, isChecking: this.isChecking });
     return () => this.listeners.delete(listener);
   }
@@ -39,61 +37,46 @@ class BackendDetector {
     );
   }
 
-  // Perform dynamic health check against configured VITE_API_BASE_URL
+  // Perform non-blocking dynamic health check against configured VITE_API_BASE_URL
   async checkHealth() {
     const baseUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL;
 
-    // If no backend URL configured (e.g. Vercel deployment), lock in Demo Mode
+    // If no backend URL configured, lock in Demo Mode
     if (!baseUrl || baseUrl.trim() === '') {
       this.setMode(true);
-      if (this._resolveInitialCheck) this._resolveInitialCheck();
       return true;
     }
 
-    // Build candidate ping URLs (handle health & categories endpoints, plus localhost vs 127.0.0.1 on Windows)
     const cleanUrl = baseUrl.replace(/\/+$/, '');
-    const pingUrls = [
-      `${cleanUrl}/health`,
-      `${cleanUrl}/categories`
-    ];
-    if (cleanUrl.includes('localhost')) {
-      pingUrls.push(`${cleanUrl.replace('localhost', '127.0.0.1')}/health`);
-      pingUrls.push(`${cleanUrl.replace('localhost', '127.0.0.1')}/categories`);
-    } else if (cleanUrl.includes('127.0.0.1')) {
-      pingUrls.push(`${cleanUrl.replace('127.0.0.1', 'localhost')}/health`);
-      pingUrls.push(`${cleanUrl.replace('127.0.0.1', 'localhost')}/categories`);
-    }
+    const pingUrl = `${cleanUrl}/health`;
 
-    let healthy = false;
-    for (const pingUrl of pingUrls) {
+    try {
+      const res = await axios.get(pingUrl, { timeout: 1500 });
+      if (res.status >= 200 && res.status < 300) {
+        this.failedCount = 0;
+        this.setMode(false);
+        return false;
+      }
+    } catch (err) {
+      // Primary health ping failed, check fallback
       try {
-        const res = await axios.get(pingUrl, { timeout: 3000 });
+        const fallbackUrl = `${cleanUrl}/categories`;
+        const res = await axios.get(fallbackUrl, { timeout: 1500 });
         if (res.status >= 200 && res.status < 300) {
-          healthy = true;
-          break;
+          this.failedCount = 0;
+          this.setMode(false);
+          return false;
         }
-      } catch (err) {
-        // Continue to next candidate URL
+      } catch (fallbackErr) {
+        this.failedCount++;
+        if (this.failedCount >= 2) {
+          this.setMode(true);
+        }
       }
     }
 
-    if (healthy) {
-      this.failedCount = 0;
-      this.setMode(false); // Live Backend is available -> Real Mode!
-    } else {
-      this.failedCount++;
-      // Require 2 consecutive failed health pings to switch to Demo Mode
-      if (this.failedCount >= 2) {
-        this.setMode(true); // Backend offline -> Demo Mode!
-      }
-    }
-
-    this.isChecking = false;
-    if (this._resolveInitialCheck) {
-      this._resolveInitialCheck();
-    }
     this.notify();
-    return !healthy;
+    return this.isDemoMode;
   }
 
   setMode(isDemo) {

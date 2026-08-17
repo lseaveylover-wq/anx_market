@@ -176,12 +176,12 @@ const Home = () => {
 
   useEffect(() => {
     setIsVisible(true);
-    const loadAllHomeData = async () => {
-      await fetchCategories();
-      await fetchTrendingData();
-      await fetchTestimonials();
-    };
-    loadAllHomeData();
+    // Parallelize all independent home data requests
+    Promise.all([
+      fetchCategories(),
+      fetchTrendingData(),
+      fetchTestimonials()
+    ]);
   }, []);
 
   const fetchCategories = async () => {

@@ -19,6 +19,7 @@ import {
     FiSearch,
     FiLogOut
 } from 'react-icons/fi';
+import { useAuth } from '../../contexts/AuthContext';
 import './SellerLayout.css';
 
 interface NavItem {
@@ -30,6 +31,7 @@ interface NavItem {
 const SellerLayout = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { logout } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [theme, setTheme] = useState<'light' | 'dark'>('dark');
     const [searchOpen, setSearchOpen] = useState(false);
@@ -54,9 +56,8 @@ const SellerLayout = () => {
         document.documentElement.setAttribute('data-theme', newTheme);
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+    const handleLogout = async () => {
+        await logout();
         navigate('/');
     };
 

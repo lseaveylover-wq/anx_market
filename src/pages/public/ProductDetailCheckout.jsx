@@ -13,7 +13,9 @@ import {
   FiPlus,
   FiMinus,
   FiCheck,
-  FiChevronRight
+  FiChevronRight,
+  FiChevronLeft,
+  FiSearch
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
@@ -21,6 +23,7 @@ import { SkeletonBox } from '../../components/common/Skeleton';
 import './ProductDetailCheckout.css';
 
 import PaymentModal from '../../components/payment/PaymentModal';
+import AuthModal from '../../components/auth/AuthModal';
 
 const ProductDetailCheckout = () => {
   const { id } = useParams();
@@ -35,6 +38,7 @@ const ProductDetailCheckout = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [createdOrder, setCreatedOrder] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     fetchProductDetails();
@@ -63,7 +67,7 @@ const ProductDetailCheckout = () => {
   const handleCheckout = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
-      toast.error('Please log in to purchase accounts!');
+      setShowAuthModal(true);
       return;
     }
 
@@ -78,7 +82,7 @@ const ProductDetailCheckout = () => {
       const orderObj = data.data || data.order || data;
       setCreatedOrder(orderObj);
       setShowPaymentModal(true);
-      toast.success('Order created! Please select payment method.');
+      toast.success('Order created! Scan Bakong KHQR to pay.');
     } catch (err) {
       toast.error(err.response?.data?.message || err.response?.data?.error || 'Failed to process checkout.');
     } finally {
@@ -128,6 +132,21 @@ const ProductDetailCheckout = () => {
   return (
     <div className="product-checkout-page">
       <div className="checkout-container">
+
+        {/* Mobile Top Nav Bar (Matching Screen 3) */}
+        <div className="mobile-top-bar">
+          <button type="button" className="mobile-top-btn" onClick={() => navigate(-1)} title="Back">
+            <FiChevronLeft />
+          </button>
+          <div className="mobile-top-actions">
+            <button type="button" className="mobile-top-btn" onClick={() => navigate('/search')} title="Search">
+              <FiSearch />
+            </button>
+            <button type="button" className="mobile-top-btn" onClick={handleShare} title="Share">
+              <FiShare2 />
+            </button>
+          </div>
+        </div>
 
         {/* Breadcrumb Navigation */}
         <div className="checkout-breadcrumb">
@@ -198,13 +217,6 @@ const ProductDetailCheckout = () => {
                   onClick={() => setIsFollowing(!isFollowing)}
                 >
                   <FiUserPlus /> {isFollowing ? 'Following' : 'Follow'}
-                </button>
-                <button
-                  type="button"
-                  className="seller-action-btn chat-btn"
-                  onClick={() => navigate('/seller/messages')}
-                >
-                  <FiMessageSquare /> Chat
                 </button>
               </div>
             </div>
@@ -286,21 +298,6 @@ const ProductDetailCheckout = () => {
                 </button>
               </div>
 
-              {/* Redeem Points Toggle */}
-              <div className="points-redeem-row">
-                <span className="points-label">
-                  Redeem <span className="coin-icon">🪙</span> 700
-                </span>
-                <label className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={usePoints}
-                    onChange={(e) => setUsePoints(e.target.checked)}
-                  />
-                  <span className="toggle-slider" />
-                </label>
-              </div>
-
               {/* Total Amount Row */}
               <div className="checkout-total-row">
                 <span className="total-label">Total Amount</span>
@@ -361,6 +358,25 @@ const ProductDetailCheckout = () => {
         </div>
       </div>
 
+      {/* Mobile Sticky Bottom Checkout Bar (Matching Screen 3) */}
+      <div className="mobile-checkout-sticky-bar">
+        <div className="mobile-total-info">
+          <span className="mobile-total-label">Total Amount</span>
+          <div className="mobile-total-val">
+            <span className="mobile-price-num">{totalPrice}</span>
+            <span className="mobile-price-curr">USD</span>
+          </div>
+        </div>
+        <button
+          type="button"
+          className="mobile-checkout-btn"
+          onClick={handleCheckout}
+          disabled={buying}
+        >
+          {buying ? 'Processing...' : 'Checkout'}
+        </button>
+      </div>
+
       {/* Payment Modal */}
       <PaymentModal
         isOpen={showPaymentModal}
@@ -369,6 +385,13 @@ const ProductDetailCheckout = () => {
         onSuccess={(result) => {
           navigate(`/payment/success?order_id=${createdOrder?.order_number || createdOrder?.id}`);
         }}
+      />
+
+      {/* Auth / Login Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode="login"
       />
     </div>
   );

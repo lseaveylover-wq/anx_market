@@ -32,7 +32,7 @@ export const sellerApi = {
 
   updateProduct: async (id: number, productData: any) => {
     if (productData instanceof FormData) {
-      const { data } = await api.post(`/seller/products/${id}?_method=PUT`, productData, {
+      const { data } = await api.post(`/seller/products/${id}`, productData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       return data;

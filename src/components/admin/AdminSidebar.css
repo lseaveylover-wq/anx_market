@@ -175,6 +175,19 @@
   border-color: rgba(182, 42, 45, 0.3);
 }
 
+.sidebar-action.back-home {
+  background: linear-gradient(135deg, rgba(182, 42, 45, 0.12) 0%, rgba(213, 87, 94, 0.08) 100%);
+  border-color: rgba(182, 42, 45, 0.3);
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.sidebar-action.back-home:hover {
+  background: linear-gradient(135deg, rgba(182, 42, 45, 0.25) 0%, rgba(213, 87, 94, 0.2) 100%);
+  border-color: rgba(182, 42, 45, 0.6);
+  color: #fff;
+}
+
 .sidebar-action.logout {
   background: rgba(239, 68, 68, 0.05);
   border-color: rgba(239, 68, 68, 0.2);

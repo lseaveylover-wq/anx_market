@@ -172,19 +172,6 @@ const PurchaseHistory = () => {
                 })}
               </AnimatePresence>
             </div>
-
-            {/* Coupons Banner */}
-            <div className="coupon-banner-card">
-              <div className="coupon-left">
-                <div className="coupon-icon-circle">
-                  <FiPercent />
-                </div>
-                <span className="coupon-text">You Have 3 Coupons & Discounts</span>
-              </div>
-              <button className="coupon-apply-btn" onClick={() => toast.success('Coupon APPLIED! Extra 10% OFF')}>
-                Apply
-              </button>
-            </div>
           </>
         )}
       </div>

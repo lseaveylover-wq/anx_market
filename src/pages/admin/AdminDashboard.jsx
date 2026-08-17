@@ -120,7 +120,7 @@ const DashboardSkeleton = () => (
 // ─── Main Component ────────────────────────────────────────────────────────────
 
 const AdminDashboard = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -134,12 +134,14 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (authLoading) return;
+
     if (!user || user.role !== 'admin') {
       navigate('/');
       return;
     }
     fetchDashboardData();
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   const fetchDashboardData = async () => {
     try {

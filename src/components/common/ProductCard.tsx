@@ -32,7 +32,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onView }) => {
     else navigate(`/products/${product.id}`);
   };
 
-  const productPrice = Number(product.price || 0).toFixed(0);
+  const productPrice = Number(product.price || 0).toFixed(2);
   const ratingCount = product.sold_count
     ? product.sold_count >= 1000
       ? `${(product.sold_count / 1000).toFixed(1)}k`

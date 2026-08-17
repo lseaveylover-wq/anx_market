@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { FiArrowLeft, FiSave, FiShield, FiLock, FiInfo, FiLayers } from 'react-icons/fi';
+import { FiArrowLeft, FiSave, FiShield, FiLock, FiInfo, FiLayers, FiImage, FiUploadCloud, FiTrash2 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { sellerApi } from '../../../services/seller.api';
 import api from '../../../services/api';
@@ -15,6 +15,8 @@ const ProductForm: React.FC = () => {
   const navigate = useNavigate();
   const isEditing = !!id;
   const [activeTab, setActiveTab] = useState<'basic' | 'details' | 'credentials'>('basic');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const { register, handleSubmit, watch, reset, formState: { errors } } = useForm();
   
@@ -46,6 +48,8 @@ const ProductForm: React.FC = () => {
   useEffect(() => {
     if (productData) {
       const p = productData;
+      setImagePreview(p.image || p.cover_image || null);
+      setImageFile(null);
       reset({
         category_id: p.category_id || p.category?.id || '',
         title: p.title || '',
@@ -67,6 +71,23 @@ const ProductForm: React.FC = () => {
       });
     }
   }, [productData, reset]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size must be less than 5MB');
+        return;
+      }
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
 
   const saveMutation = useMutation({
     mutationFn: (payload: any) => isEditing ? sellerApi.updateProduct(Number(id), payload) : sellerApi.createProduct(payload),
@@ -92,7 +113,27 @@ const ProductForm: React.FC = () => {
       return;
     }
 
-    saveMutation.mutate(data);
+    if (imageFile) {
+      const formData = new FormData();
+      Object.keys(data).forEach((key) => {
+        if (key === 'credentials') {
+          Object.keys(data.credentials || {}).forEach((cKey) => {
+            if (data.credentials[cKey] !== undefined && data.credentials[cKey] !== null && data.credentials[cKey] !== '') {
+              formData.append(`credentials[${cKey}]`, data.credentials[cKey]);
+            }
+          });
+        } else if (key !== 'image' && key !== 'cover_image') {
+          if (data[key] !== undefined && data[key] !== null) {
+            formData.append(key, String(data[key]));
+          }
+        }
+      });
+      formData.append('image', imageFile);
+      formData.append('cover_image', imageFile);
+      saveMutation.mutate(formData);
+    } else {
+      saveMutation.mutate(data);
+    }
   };
 
   if (isEditing && isFetchingProduct) {
@@ -253,6 +294,101 @@ const ProductForm: React.FC = () => {
                       placeholder="Detailed information about rank, inventory items, characters, etc."
                       {...register('long_description')}
                     />
+                  </div>
+
+                  {/* Image Upload & Preview Section */}
+                  <div style={{ gridColumn: '1 / -1', background: 'rgba(255, 255, 255, 0.03)', padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+                    <label className="seller-form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                      <FiImage style={{ color: '#D5575E' }} /> Product Cover Image
+                    </label>
+
+                    <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                      {/* Image Preview Thumbnail */}
+                      <div
+                        style={{
+                          width: '120px',
+                          height: '120px',
+                          borderRadius: '14px',
+                          overflow: 'hidden',
+                          border: '2px dashed rgba(182, 42, 45, 0.4)',
+                          background: 'var(--bg-main)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          position: 'relative',
+                          flexShrink: 0
+                        }}
+                      >
+                        {imagePreview ? (
+                          <img
+                            src={imagePreview}
+                            alt="Product Preview"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.8rem', padding: '0.5rem' }}>
+                            <FiImage style={{ fontSize: '1.8rem', marginBottom: '0.25rem', opacity: 0.6 }} />
+                            <div>No Image</div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Upload Controls */}
+                      <div style={{ flex: 1, minWidth: '220px' }}>
+                        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                          <label
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                              padding: '0.65rem 1.25rem',
+                              background: 'linear-gradient(135deg, #B62A2D 0%, #D5575E 100%)',
+                              color: '#fff',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              fontWeight: 600,
+                              fontSize: '0.88rem',
+                              boxShadow: '0 4px 15px rgba(182, 42, 45, 0.3)',
+                              transition: 'all 0.2s ease'
+                            }}
+                          >
+                            <FiUploadCloud style={{ fontSize: '1.1rem' }} />
+                            {imagePreview ? 'Change Image' : 'Upload Image'}
+                            <input
+                              type="file"
+                              accept="image/png, image/jpeg, image/jpg, image/webp, image/gif"
+                              style={{ display: 'none' }}
+                              onChange={handleImageChange}
+                            />
+                          </label>
+
+                          {imagePreview && (
+                            <button
+                              type="button"
+                              onClick={handleRemoveImage}
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                padding: '0.65rem 1rem',
+                                background: 'rgba(239, 68, 68, 0.15)',
+                                color: '#ef4444',
+                                border: '1px solid rgba(239, 68, 68, 0.3)',
+                                borderRadius: '10px',
+                                cursor: 'pointer',
+                                fontWeight: 600,
+                                fontSize: '0.88rem'
+                              }}
+                            >
+                              <FiTrash2 /> Remove
+                            </button>
+                          )}
+                        </div>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', margin: '0.6rem 0 0 0' }}>
+                          Recommended: PNG, JPG, or WEBP under 5MB. Clear game graphics or screenshots help items sell faster.
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   <div>

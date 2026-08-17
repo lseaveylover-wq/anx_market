@@ -8,6 +8,8 @@
 .seller-layout {
   position: fixed;
   inset: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   background: var(--bg-main);
   z-index: 500;
@@ -16,12 +18,14 @@
 
 .seller-content {
   flex: 1;
-  padding: 5rem 2rem 2rem 2rem;
+  padding: 1.5rem 2rem 2rem 2rem;
   margin-left: 280px;
   background: var(--bg-main);
   transition: margin-left 0.3s ease;
   height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* ── Page Header (mirrors .admin-header) ────────────────────────────────── */

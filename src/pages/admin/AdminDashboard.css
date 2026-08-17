@@ -1,14 +1,23 @@
 /* Admin Layout */
 .admin-layout {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
-  min-height: 100vh;
+  overflow: hidden;
   background: var(--background-color);
+  z-index: 500;
 }
 
 .admin-content {
   flex: 1;
-  padding: 5rem 2rem 2rem 2rem;
+  padding: 1.5rem 2rem 2rem 2rem;
   margin-left: 280px;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
   transition: margin-left 0.3s ease;
 }
 

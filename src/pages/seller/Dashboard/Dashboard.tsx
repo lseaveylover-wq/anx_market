@@ -46,7 +46,7 @@ const SkeletonActionRow = () => (
 const Dashboard: React.FC = () => {
   const { user } = useAuth() as { user: any };
   const navigate = useNavigate();
-  const { stats, isLoading } = useSellerStore();
+  const { stats, isLoading, error, fetchStats } = useSellerStore();
 
   const fmt = (v: number) => `$${(v || 0).toFixed(2)}`;
   const num = (v: number) => new Intl.NumberFormat('en-US').format(v || 0);
@@ -74,7 +74,7 @@ const Dashboard: React.FC = () => {
   };
 
   // ── Loading state ─────────────────────────────────────────────────────────
-  if (isLoading || !stats) {
+  if (isLoading) {
     return (
       <>
         {/* Header skeleton */}
@@ -113,6 +113,23 @@ const Dashboard: React.FC = () => {
           ))}
         </div>
       </>
+    );
+  }
+
+  // ── Error / retry state ───────────────────────────────────────────────────
+  if (!stats) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '1rem' }}>
+        <p style={{ color: 'var(--text-muted, #aaa)', fontSize: '1rem' }}>
+          {error || 'Could not load dashboard data.'}
+        </p>
+        <button
+          onClick={() => fetchStats()}
+          style={{ padding: '0.6rem 1.5rem', borderRadius: '8px', background: '#B62A2D', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 600 }}
+        >
+          Retry
+        </button>
+      </div>
     );
   }
 
