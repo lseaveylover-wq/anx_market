@@ -34,7 +34,7 @@ const PaymentSuccess = () => {
         </div>
 
         <div className="status-actions-row">
-          <button className="primary-action-btn" onClick={() => navigate('/orders')}>
+          <button className="primary-action-btn" onClick={() => navigate(`/purchase-history?open_vault=${orderId}`)}>
             <FiPackage /> View My Purchased Credentials
           </button>
 

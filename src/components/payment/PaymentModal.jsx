@@ -45,16 +45,18 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
     return () => clearInterval(timer);
   }, [paymentData, expired]);
 
-  // Real-time 1-second backend MD5 verification polling & EventSource SSE stream
+  // Real-time 3-second backend MD5 verification polling & EventSource SSE stream
   useEffect(() => {
     if (!paymentData || expired || !paymentData.payment_id) return;
 
     setPolling(true);
+    let consecutiveErrors = 0;
 
-    // 1-second MD5 check polling interval
+    // 3-second MD5 check polling interval (Bakong API recommends 5s; 3s is safe with server-side cache)
     const pollInterval = setInterval(async () => {
       try {
         const { data } = await api.get(`/payments/${paymentData.payment_id}/status`);
+        consecutiveErrors = 0; // reset on success
         if (data.status === 'paid') {
           clearInterval(pollInterval);
           toast.success('Bakong KHQR Payment Confirmed!');
@@ -64,9 +66,15 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
           setExpired(true);
         }
       } catch (err) {
-        console.error('Status poll error', err);
+        consecutiveErrors++;
+        console.error(`Status poll error (attempt ${consecutiveErrors})`, err);
+        // Stop polling after 10 consecutive failures (e.g. server down)
+        if (consecutiveErrors >= 10) {
+          clearInterval(pollInterval);
+          toast.error('Payment verification lost connection. Please refresh.');
+        }
       }
-    }, 1000); // Check MD5 every 1 second
+    }, 3000); // Check MD5 every 3 seconds (rate-limit safe)
 
     // Server-Sent Events (SSE) Real-Time Stream Listener
     let eventSource = null;
@@ -198,8 +206,8 @@ const PaymentModal = ({ isOpen, onClose, order, onSuccess }) => {
 
                     <div className="khqr-timer-bar">
                       <span>Expires in: <strong>{formatTimer(timeLeft)}</strong></span>
-                      <span className="live-poll-dot" title="Listening for NBC Bakong payment verification every 1s">
-                        <span className="pulse-dot" /> Checking NBC (Every 1s)
+                      <span className="live-poll-dot" title="Listening for NBC Bakong payment verification every 3s">
+                        <span className="pulse-dot" /> Checking NBC (Every 3s)
                       </span>
                     </div>
 

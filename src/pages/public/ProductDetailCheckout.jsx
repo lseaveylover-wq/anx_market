@@ -40,6 +40,7 @@ const ProductDetailCheckout = () => {
   const [createdOrder, setCreatedOrder] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [existingOrder, setExistingOrder] = useState(null); // active order for this product
 
   useEffect(() => {
     fetchProductDetails();
@@ -50,6 +51,23 @@ const ProductDetailCheckout = () => {
     try {
       const { data } = await api.get(`/products/${id}`);
       setProduct(data.data || data);
+
+      // Check if the logged-in user already has a paid/active order for this product
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const ordersRes = await api.get('/orders');
+          const orders = ordersRes.data?.data || ordersRes.data?.data?.data || [];
+          const activeStatuses = ['paid', 'delivering', 'pending_payment', 'completed'];
+          const found = orders.find(o =>
+            activeStatuses.includes(o.status) &&
+            o.items?.some(item => String(item.product_id) === String(id))
+          );
+          if (found) setExistingOrder(found);
+        } catch (_) {
+          // not logged in or can't fetch orders — ignore
+        }
+      }
     } catch (err) {
       console.error('Failed to load product details', err);
       toast.error('Product not found or unavailable');
@@ -280,50 +298,84 @@ const ProductDetailCheckout = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              {/* Stock Available */}
-              <div className="stock-header-tag">
-                {product.stock || 5} Available
-              </div>
-
-              {/* Quantity Stepper */}
-              <div className="quantity-stepper-box">
-                <button
-                  type="button"
-                  className="step-btn"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  disabled={quantity <= 1}
-                >
-                  <FiMinus />
-                </button>
-                <span className="quantity-display">{quantity}</span>
-                <button
-                  type="button"
-                  className="step-btn step-plus"
-                  onClick={() => setQuantity(quantity + 1)}
-                  disabled={quantity >= (product.stock || 10)}
-                >
-                  <FiPlus />
-                </button>
-              </div>
-
-              {/* Total Amount Row */}
-              <div className="checkout-total-row">
-                <span className="total-label">Total Amount</span>
-                <div className="total-price-val">
-                  <span className="price-big">{totalPrice}</span>
-                  <span className="price-currency">USD</span>
+              {/* Stock Available — hidden if already purchased */}
+              {!existingOrder && (
+                <div className="stock-header-tag">
+                  {product.stock != null ? product.stock : '?'} Available
                 </div>
-              </div>
+              )}
 
-              {/* Red Checkout CTA Button */}
-              <button
-                type="button"
-                className="main-checkout-btn"
-                onClick={handleCheckout}
-                disabled={buying}
-              >
-                {buying ? 'Processing Order...' : 'Checkout'}
-              </button>
+              {/* Quantity Stepper — hidden when already purchased */}
+              {!existingOrder && (
+                <div className="quantity-stepper-box">
+                  <button
+                    type="button"
+                    className="step-btn"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    disabled={quantity <= 1}
+                  >
+                    <FiMinus />
+                  </button>
+                  <span className="quantity-display">{quantity}</span>
+                  <button
+                    type="button"
+                    className="step-btn step-plus"
+                    onClick={() => setQuantity(quantity + 1)}
+                    disabled={quantity >= (product.stock ?? 10)}
+                  >
+                    <FiPlus />
+                  </button>
+                </div>
+              )}
+
+              {/* Total Amount Row — hidden when already purchased */}
+              {!existingOrder && (
+                <div className="checkout-total-row">
+                  <span className="total-label">Total Amount</span>
+                  <div className="total-price-val">
+                    <span className="price-big">{totalPrice}</span>
+                    <span className="price-currency">USD</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Red Checkout CTA Button — replaced with View Order if already purchased */}
+              {existingOrder ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div style={{
+                    background: 'linear-gradient(135deg, #10b981, #059669)',
+                    borderRadius: '10px',
+                    padding: '0.75rem 1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: '#fff',
+                    fontWeight: 600,
+                    fontSize: '0.9rem'
+                  }}>
+                    <FiCheckCircle />
+                    You already purchased this product
+                  </div>
+                  <button
+                    type="button"
+                    className="main-checkout-btn"
+                    style={{ background: 'linear-gradient(135deg, #1d4ed8, #2563eb)' }}
+                    onClick={() => navigate('/orders')}
+                  >
+                    <FiCheck style={{ marginRight: '0.4rem' }} />
+                    View Your Order
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className="main-checkout-btn"
+                  onClick={handleCheckout}
+                  disabled={buying}
+                >
+                  {buying ? 'Processing Order...' : 'Checkout'}
+                </button>
+              )}
 
               {/* Trust & Guarantee Badges */}
               <div className="trust-badges-container">

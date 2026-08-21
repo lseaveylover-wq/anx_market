@@ -161,6 +161,24 @@ const Home = () => {
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
   const scrollRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [canScroll, setCanScroll] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+  const hasMoved = useRef(false);
+
+  const checkCanScroll = () => {
+    if (scrollRef.current) {
+      const { scrollWidth, clientWidth, scrollLeft } = scrollRef.current;
+      const maxScroll = scrollWidth - clientWidth;
+      setCanScroll(maxScroll > 10);
+      if (maxScroll > 0) {
+        setScrollProgress((scrollLeft / maxScroll) * 100);
+      } else {
+        setScrollProgress(0);
+      }
+    }
+  };
 
   const handleCategoryScroll = () => {
     if (scrollRef.current) {
@@ -173,6 +191,44 @@ const Home = () => {
       }
     }
   };
+
+  const handleMouseDown = (e) => {
+    if (!scrollRef.current) return;
+    setIsDragging(true);
+    hasMoved.current = false;
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeftState(scrollRef.current.scrollLeft);
+  };
+
+  const handleMouseLeaveOrUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    if (Math.abs(walk) > 5) {
+      hasMoved.current = true;
+    }
+    scrollRef.current.scrollLeft = scrollLeftState - walk;
+  };
+
+  const handleCategoryClick = (catId) => {
+    if (hasMoved.current) return;
+    if (catId) {
+      navigate(`/products?category=${catId}`);
+    } else {
+      navigate('/products');
+    }
+  };
+
+  useEffect(() => {
+    checkCanScroll();
+    window.addEventListener('resize', checkCanScroll);
+    return () => window.removeEventListener('resize', checkCanScroll);
+  }, [categories, loadingCategories]);
 
   useEffect(() => {
     setIsVisible(true);
@@ -306,7 +362,7 @@ const Home = () => {
       >
         <div className="hero-content">
           <motion.div
-            className="hero-badge desktop-only"
+            className="hero-badge"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
@@ -315,7 +371,7 @@ const Home = () => {
           </motion.div>
 
           <motion.h1
-            className="hero-title desktop-only"
+            className="hero-title"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, type: 'spring', stiffness: 100 }}
@@ -326,7 +382,7 @@ const Home = () => {
           </motion.h1>
 
           <motion.p
-            className="hero-description desktop-only"
+            className="hero-description"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
@@ -336,14 +392,14 @@ const Home = () => {
           </motion.p>
 
           <motion.div
-            className="hero-cta desktop-only"
+            className="hero-cta"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
             <motion.button
               className="cta-primary"
-              whileHover={{ scale: 1.05, boxShadow: '0 15px 40px rgba(102, 126, 234, 0.4)' }}
+              whileHover={{ scale: 1.05, boxShadow: '0 15px 40px rgba(182, 42, 45, 0.4)' }}
               whileTap={{ scale: 0.95 }}
               onClick={handleBrowseAccountsClick}
             >
@@ -360,22 +416,26 @@ const Home = () => {
             </motion.button>
           </motion.div>
 
-          {/* Scrollable DB Categories Carousel (4 Columns x 2 Rows Grid) */}
+          {/* Scrollable DB Categories Carousel */}
           <div className="hero-categories-container">
             <div className="hero-categories-header">
               <h3>Explore Categories</h3>
             </div>
 
             <div
-              className="hero-categories-scroll"
+              className={`hero-categories-scroll ${isDragging ? 'dragging' : ''}`}
               ref={scrollRef}
               onScroll={handleCategoryScroll}
+              onMouseDown={handleMouseDown}
+              onMouseLeave={handleMouseLeaveOrUp}
+              onMouseUp={handleMouseLeaveOrUp}
+              onMouseMove={handleMouseMove}
             >
               {loadingCategories ? (
                 Array.from({ length: 8 }).map((_, idx) => (
                   <div key={idx} className="category-icon-card skeleton">
-                    <SkeletonBox width="46px" height="46px" radius="14px" />
-                    <SkeletonBox width="54px" height="12px" radius="4px" style={{ marginTop: '6px' }} />
+                    <SkeletonBox width="42px" height="42px" radius="12px" />
+                    <SkeletonBox width="60px" height="12px" radius="4px" style={{ marginTop: '6px' }} />
                   </div>
                 ))
               ) : categories.length > 0 ? (
@@ -383,14 +443,14 @@ const Home = () => {
                   <motion.div
                     key={cat.id || cat.name}
                     className="category-icon-card"
-                    whileHover={{ scale: 1.05, y: -4 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate(`/products?category=${cat.id}`)}
+                    whileHover={{ scale: 1.04, y: -3 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => handleCategoryClick(cat.id)}
                   >
                     <div className="category-icon-badge">
                       {getCategoryIcon(cat.name)}
                     </div>
-                    <span className="category-icon-title">{cat.name}</span>
+                    <span className="category-icon-title" title={cat.name}>{cat.name}</span>
                   </motion.div>
                 ))
               ) : (
@@ -407,28 +467,30 @@ const Home = () => {
                   <motion.div
                     key={item.id}
                     className="category-icon-card"
-                    whileHover={{ scale: 1.05, y: -4 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate('/products')}
+                    whileHover={{ scale: 1.04, y: -3 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => handleCategoryClick()}
                   >
                     <div className="category-icon-badge">
                       {item.icon}
                     </div>
-                    <span className="category-icon-title">{item.name}</span>
+                    <span className="category-icon-title" title={item.name}>{item.name}</span>
                   </motion.div>
                 ))
               )}
             </div>
 
-            {/* Scroll Indicator (matching Image 2) */}
-            <div className="scroll-indicator-container">
-              <div className="scroll-indicator-track">
-                <div
-                  className="scroll-indicator-thumb"
-                  style={{ left: `${Math.min(Math.max(scrollProgress, 0), 70)}%` }}
-                />
+            {/* Scroll Indicator (Only shown when scrollable) */}
+            {canScroll && (
+              <div className="scroll-indicator-container">
+                <div className="scroll-indicator-track">
+                  <div
+                    className="scroll-indicator-thumb"
+                    style={{ left: `${Math.min(Math.max(scrollProgress, 0), 70)}%` }}
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 

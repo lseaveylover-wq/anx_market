@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   FiArrowLeft,
   FiShoppingBag,
@@ -9,7 +9,11 @@ import {
   FiPercent,
   FiX,
   FiShield,
-  FiCopy
+  FiCopy,
+  FiEye,
+  FiEyeOff,
+  FiMail,
+  FiInfo
 } from 'react-icons/fi';
 import api from '../../services/api';
 import { SkeletonBox } from '../../components/common/Skeleton';
@@ -18,15 +22,32 @@ import './OrdersPage.css';
 
 const PurchaseHistory = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const openVaultId = searchParams.get('open_vault');
+
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCredsOrder, setSelectedCredsOrder] = useState(null);
   const [credsData, setCredsData] = useState(null);
   const [loadingCreds, setLoadingCreds] = useState(false);
+  const [showPassword, setShowPassword] = useState(true); // Default: SHOW password in plain text
 
   useEffect(() => {
     fetchCompletedOrders();
   }, []);
+
+  useEffect(() => {
+    if (openVaultId && orders.length > 0) {
+      const matched = orders.find(
+        (o) => String(o.id) === String(openVaultId) || String(o.order_number) === String(openVaultId)
+      );
+      if (matched) {
+        handleViewCredentials(matched);
+      } else {
+        handleViewCredentials({ id: openVaultId });
+      }
+    }
+  }, [openVaultId, orders]);
 
   const fetchCompletedOrders = async () => {
     try {
@@ -208,40 +229,94 @@ const PurchaseHistory = () => {
                   <SkeletonBox height="20px" width="60%" radius="6px" style={{ marginTop: '1rem' }} />
                 </div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <div style={{ background: 'var(--bg-main)', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border-color)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                  {/* Username / Login */}
+                  <div style={{ background: 'var(--bg-main)', padding: '0.9rem 1rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Account Login / Username</span>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.3rem' }}>
-                      <code style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                        {credsData?.credentials?.username || credsData?.account_username || 'radiant_player_99'}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.35rem' }}>
+                      <code style={{ fontSize: '0.98rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                        {credsData?.items?.[0]?.product?.credentials?.username ||
+                          credsData?.credentials?.username ||
+                          credsData?.account_username ||
+                          'radiant_player_99'}
                       </code>
                       <button
                         type="button"
-                        onClick={() => copyToClipboard(credsData?.credentials?.username || credsData?.account_username || 'radiant_player_99', 'Username')}
-                        style={{ background: 'transparent', border: 'none', color: '#D5575E', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem', fontSize: '0.82rem', fontWeight: 600 }}
+                        onClick={() =>
+                          copyToClipboard(
+                            credsData?.items?.[0]?.product?.credentials?.username ||
+                              credsData?.credentials?.username ||
+                              credsData?.account_username ||
+                              'radiant_player_99',
+                            'Username'
+                          )
+                        }
+                        style={{ background: 'transparent', border: 'none', color: '#D5575E', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.85rem', fontWeight: 700 }}
                       >
                         <FiCopy /> Copy
                       </button>
                     </div>
                   </div>
 
-                  <div style={{ background: 'var(--bg-main)', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border-color)' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Account Password</span>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.3rem' }}>
-                      <code style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                        {credsData?.credentials?.password || credsData?.account_password || '••••••••••••'}
+                  {/* Password (Visible in Plain Text by default) */}
+                  <div style={{ background: 'var(--bg-main)', padding: '0.9rem 1rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Account Password</span>
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem' }}
+                      >
+                        {showPassword ? <FiEyeOff /> : <FiEye />} {showPassword ? 'Hide' : 'Show'}
+                      </button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.35rem' }}>
+                      <code style={{ fontSize: '1.02rem', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: showPassword ? 'normal' : '0.12em' }}>
+                        {showPassword
+                          ? (credsData?.items?.[0]?.product?.credentials?.password ||
+                             credsData?.credentials?.password ||
+                             credsData?.account_password ||
+                             'P@ssw0rd2026!')
+                          : '••••••••••••'}
                       </code>
                       <button
                         type="button"
-                        onClick={() => copyToClipboard(credsData?.credentials?.password || credsData?.account_password || 'P@ssw0rd2026!', 'Password')}
-                        style={{ background: 'transparent', border: 'none', color: '#D5575E', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem', fontSize: '0.82rem', fontWeight: 600 }}
+                        onClick={() =>
+                          copyToClipboard(
+                            credsData?.items?.[0]?.product?.credentials?.password ||
+                              credsData?.credentials?.password ||
+                              credsData?.account_password ||
+                              'P@ssw0rd2026!',
+                            'Password'
+                          )
+                        }
+                        style={{ background: 'transparent', border: 'none', color: '#D5575E', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.85rem', fontWeight: 700 }}
                       >
                         <FiCopy /> Copy
                       </button>
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', fontSize: '0.82rem', fontWeight: 600 }}>
+                  {/* Extra Notes / Email if present */}
+                  {(credsData?.items?.[0]?.product?.credentials?.login_email || credsData?.credentials?.login_email) && (
+                    <div style={{ background: 'var(--bg-main)', padding: '0.85rem 1rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Associated Email</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.3rem' }}>
+                        <span style={{ fontSize: '0.92rem', color: 'var(--text-primary)', fontWeight: 600 }}>
+                          {credsData?.items?.[0]?.product?.credentials?.login_email || credsData?.credentials?.login_email}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(credsData?.items?.[0]?.product?.credentials?.login_email || credsData?.credentials?.login_email, 'Email')}
+                          style={{ background: 'transparent', border: 'none', color: '#D5575E', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem', fontSize: '0.82rem', fontWeight: 600 }}
+                        >
+                          <FiCopy /> Copy
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1rem', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', fontSize: '0.82rem', fontWeight: 600 }}>
                     <FiShield /> Full Access Email & Security Guarantee Active
                   </div>
                 </div>

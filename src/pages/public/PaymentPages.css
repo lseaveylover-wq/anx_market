@@ -1,11 +1,11 @@
 .payment-status-page {
-  min-height: 100vh;
-  padding-top: 8rem;
-  padding-bottom: 5rem;
+  min-height: 80vh;
+  padding-top: 3rem;
+  padding-bottom: 4rem;
   background: transparent;
   color: var(--text-primary);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
@@ -14,23 +14,23 @@
 .payment-status-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
-  border-radius: 24px;
-  max-width: 520px;
+  border-radius: 14px;
+  max-width: 480px;
   width: 100%;
-  padding: 3rem 2rem;
+  padding: 2.25rem 2rem;
   text-align: center;
   box-shadow: var(--shadow-lg);
 }
 
 .status-icon-badge {
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.4rem;
-  margin: 0 auto 1.5rem;
+  font-size: 2.2rem;
+  margin: 0 auto 1.25rem;
 }
 
 .status-icon-badge.success {
@@ -44,7 +44,7 @@
 }
 
 .payment-status-card h1 {
-  font-size: 1.8rem;
+  font-size: 1.7rem;
   font-weight: 800;
   margin: 0 0 0.5rem 0;
   color: var(--text-primary);
@@ -52,33 +52,33 @@
 
 .status-subtitle {
   color: var(--text-secondary);
-  font-size: 0.98rem;
-  margin: 0 0 1.75rem 0;
+  font-size: 0.95rem;
+  margin: 0 0 1.5rem 0;
   line-height: 1.5;
 }
 
 .escrow-notice-banner {
   background: rgba(16, 185, 129, 0.1);
   border: 1px solid rgba(16, 185, 129, 0.25);
-  border-radius: 16px;
-  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  padding: 0.85rem 1.15rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.85rem;
   text-align: left;
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
 }
 
 .escrow-notice-banner strong {
   color: #10b981;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   display: block;
 }
 
 .escrow-notice-banner p {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
 
 .status-actions-row {
@@ -91,16 +91,16 @@
   background: linear-gradient(135deg, #B62A2D 0%, #D5575E 100%);
   color: #ffffff;
   border: none;
-  padding: 0.95rem;
-  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
   font-weight: 800;
-  font-size: 1rem;
+  font-size: 0.95rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 8px 25px rgba(182, 42, 45, 0.35);
+  box-shadow: 0 4px 15px rgba(182, 42, 45, 0.35);
   transition: transform 0.15s ease;
 }
 
